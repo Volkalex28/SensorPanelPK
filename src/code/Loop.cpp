@@ -31,14 +31,14 @@ GUI Screens(8);
 ScreenGlobal Global;			//0
 ScreenMenu Menu;				//1
 ScreenSysSett SystemSett;		//2
-ScreenSetTime SetTime;			//3
-ScreenCOM COMSett;				//4
-ScreenAutorization Autorization;//5
-ScreenCrash sCrash;				//6
-ScreenEvents sEvents;			//7
-ScreenZVU sZVU;					//8
-ScreenSettZVU sSettZVU;			//9
-ScreenBattery sBatteryControl;	//10
+// ScreenSetTime SetTime;			//3
+// ScreenCOM COMSett;				//4
+// ScreenAutorization Autorization;//5
+// ScreenCrash sCrash;				//6
+// ScreenEvents sEvents;			//7
+// ScreenZVU sZVU;					//8
+// ScreenSettZVU sSettZVU;			//9
+// ScreenBattery sBatteryControl;	//10
 
 WindowReboot Reboot;
 
