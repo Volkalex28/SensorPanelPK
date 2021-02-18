@@ -35,6 +35,7 @@ file(GLOB SOURCE
   ${MIDDLE_DIR}/Third_Party/FreeRTOS/Source/CMSIS_RTOS_V2/*.c
 
   ${CODE_DIR}/*.cpp
+  ${CODE_DIR}/screens/*.cpp
   ${CODE_DIR}/devices/*.cpp
   ${CODE_DIR}/VA_EEPROM_AT25640/*.cpp
   ${CODE_DIR}/VA_Modbus/*.cpp

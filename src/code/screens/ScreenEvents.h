@@ -299,8 +299,6 @@ private:
 
 		return temp;
 	}
-
-
 };
 
 
