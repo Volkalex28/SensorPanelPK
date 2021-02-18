@@ -7,6 +7,8 @@
 
 #include "Loop.h"
 
+#include "../etl/include/etl/vector.h"
+
 #include "ScreenGlobal.h"
 #include "ScreenMenu.h"
 #include "ScreenSysSett.h"
@@ -20,6 +22,8 @@
 #include "ScreenBattery.h"
 #include "ScreenMain.h"
 #include "ScreenContrlInsulation.h"
+
+etl::vector<uint8_t, 10> v = {0};
 
 Memory_un Memory[17000] = {};
 uint16_t Buf[4000] = {};
@@ -166,7 +170,7 @@ void LoopTask(void *argument) {
 		taskYIELD();
 		osDelay(5);
 	}
-
+  
 }
 
 void ExchangeTask(void *argument) {
