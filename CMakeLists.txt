@@ -86,7 +86,7 @@ target_include_directories(${PROJECT_NAME} PRIVATE
   ${SOURCE_DIR}/middlewares/Third_Party/FreeRTOS/Source/include
   ${SOURCE_DIR}/middlewares/Third_Party/FreeRTOS/Source/CMSIS_RTOS_V2
   ${SOURCE_DIR}/middlewares/Third_Party/FreeRTOS/Source/portable/GCC/ARM_CM7/r0p1
-#  ${SOURCE_DIR}/etl/include/etl
+  ${SOURCE_DIR}/etl/include
 )
 
 
