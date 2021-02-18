@@ -28,7 +28,7 @@ bool CrashBattery = true;
 
 using namespace VA;
 
-GUI Screens(1);
+GUI Screens(11);
 
 ScreenGlobal Global;									//0
 ScreenMenu Menu;										//1
@@ -42,7 +42,7 @@ ScreenZVU sZVU;											//8
 ScreenSettZVU sSettZVU;									//9
 ScreenBattery sBatteryControl;							//10
 //ScreenMain sMain;										//11
-//ScreenContrlInsulation sContrlInsulation;				//12
+ScreenContrlInsulation sContrlInsulation;				//12
 
 WindowReboot Reboot;
 
