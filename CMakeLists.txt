@@ -26,6 +26,7 @@ set(MIDDLE_DIR ${SOURCE_DIR}/middlewares)
 set(CORE_DIR ${SOURCE_DIR}/core)
 set(CODE_DIR ${SOURCE_DIR}/code)
 
+
 file(GLOB SOURCE
   ${CORE_DIR}/*.c
   ${DRIVER_DIR}/STM32F7xx_HAL_Driver/Src/*.c
@@ -35,6 +36,7 @@ file(GLOB SOURCE
   ${MIDDLE_DIR}/Third_Party/FreeRTOS/Source/CMSIS_RTOS_V2/*.c
 
   ${CODE_DIR}/*.cpp
+  ${CODE_DIR}/screens/*.cpp
   ${CODE_DIR}/devices/*.cpp
   ${CODE_DIR}/VA_EEPROM_AT25640/*.cpp
   ${CODE_DIR}/VA_Modbus/*.cpp
@@ -84,7 +86,10 @@ target_include_directories(${PROJECT_NAME} PRIVATE
   ${SOURCE_DIR}/middlewares/Third_Party/FreeRTOS/Source/include
   ${SOURCE_DIR}/middlewares/Third_Party/FreeRTOS/Source/CMSIS_RTOS_V2
   ${SOURCE_DIR}/middlewares/Third_Party/FreeRTOS/Source/portable/GCC/ARM_CM7/r0p1
+  ${SOURCE_DIR}/etl/include
 )
+
+
 
 target_compile_options(${PROJECT_NAME} PRIVATE
   -mcpu=cortex-m7

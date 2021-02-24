@@ -13,6 +13,7 @@
 #include "ScreenSysSett.h"
 #include "ScreenZVU.h"
 #include "ScreenBattery.h"
+#include "ScreenMain.h"
 
 using namespace VA;
 
@@ -21,18 +22,20 @@ extern ScreenEvents sEvents;
 extern ScreenSysSett SystemSett;
 extern ScreenZVU sZVU;
 extern ScreenBattery sBatteryControl;
+extern ScreenMain sMain;
 
 class ScreenMenu : public BaseScreen {
 
 public:
 
-	Button lookCrash = Button(this, 60, 100, 410, 110, 0x7BEF, "Просмотр аварий", 0);
-	Button lookEvent = Button(this, 60, 230, 410, 60, 0x7BEF, "Просмотр событий", 0);
-	Button systemSetting = Button(this, 60, 305, 410, 60, 0x7BEF, "Системные настройки", 0);
+	Button lookCrash	 = Button(this, 60, 100, 400, 110, 0x7BEF, "Просмотр аварий", 0);
+	Button lookEvent	 = Button(this, 60, 230, 400, 60, 0x7BEF, "Просмотр событий", 0);
+	Button systemSetting = Button(this, 60, 305, 400, 60, 0x7BEF, "Системные настройки", 0);
 
-	Button butZVU = Button(this, 530, 100, 220, 120, 0x7BEF, "ЗВУ", 0);
-	Button butDCXJ = Button(this, 530, 250, 220, 120, 0x7BEF, "Контроль  АКБ", 0);
-
+	Button butZVU	 = Button(this, 505, 100, 100, 110, 0x7BEF, "ЗВУ", 0);
+	Button butDCXJ	 = Button(this, 615, 100, 160, 110, 0x7BEF, "Контроль  АКБ", 0);
+	Button butMain	 = Button(this, 505, 230, 270, 60, 0x7BEF, "Основной экран", 0);
+	Button butAnalog = Button(this, 505, 305, 270, 60, 0x7BEF, "Аналоговая плата", 0);
 
 	ScreenMenu(void) : BaseScreen(&Screens, "Меню") {
 
@@ -41,6 +44,7 @@ public:
 		this->lookEvent.addCallBack([]() { Screens.JumpScreen(&sEvents); });
 		this->butZVU.addCallBack([]() { Screens.JumpScreen(&sZVU); });
 		this->butDCXJ.addCallBack([]() { Screens.JumpScreen(&sBatteryControl); });
+		//this->butMain.addCallBack([]() { Screens.JumpScreen(&sMain); });
 	}
 };
 

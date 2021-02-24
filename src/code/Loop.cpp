@@ -7,6 +7,8 @@
 
 #include "Loop.h"
 
+#include "./etl/vector.h"
+
 #include "ScreenGlobal.h"
 #include "ScreenMenu.h"
 #include "ScreenSysSett.h"
@@ -18,6 +20,8 @@
 #include "ScreenZVU.h"
 #include "ScreenSettZVU.h"
 #include "ScreenBattery.h"
+#include "ScreenMain.h"
+#include "ScreenContrlInsulation.h"
 
 Memory_un Memory[17000] = {};
 uint16_t Buf[4000] = {};
@@ -26,19 +30,21 @@ bool CrashBattery = true;
 
 using namespace VA;
 
-GUI Screens(8);
+GUI Screens(1);
 
-ScreenGlobal Global;			//0
-ScreenMenu Menu;				//1
-ScreenSysSett SystemSett;		//2
-ScreenSetTime SetTime;			//3
-ScreenCOM COMSett;				//4
-ScreenAutorization Autorization;//5
-ScreenCrash sCrash;				//6
-ScreenEvents sEvents;			//7
-ScreenZVU sZVU;					//8
-ScreenSettZVU sSettZVU;			//9
-ScreenBattery sBatteryControl;	//10
+ScreenGlobal Global;									//0
+ScreenMenu Menu;										//1
+ScreenSysSett SystemSett;								//2
+ScreenSetTime SetTime;									//3
+ScreenCOM COMSett;										//4
+ScreenAutorization Autorization;						//5
+ScreenCrash sCrash;										//6
+ScreenEvents sEvents;									//7
+ScreenZVU sZVU;											//8
+ScreenSettZVU sSettZVU;									//9
+ScreenBattery sBatteryControl;							//10
+//ScreenMain sMain;										//11
+ScreenContrlInsulation sContrlInsulation;				//12
 
 WindowReboot Reboot;
 
@@ -95,6 +101,8 @@ void Setup(void) {
 	ModbusInit.Dir_Port		= DIR4_GPIO_Port;
 	ModbusInit.Dir_Pin		= DIR4_Pin;
 	ModbusInit.Dir_Polarity = VA_MODBUS_POLARITY_LOW;
+	ModbusInit.WaitSlave	= 500;
+	ModbusInit.CountRepeat	= 2;
 	Modbus1.Init(&ModbusInit, ModbusRegime::Slave, &htim7);
 	Modbus1.SetBaudRate(Memory[eMemory::BaudRateCOM1].U*100);
 	Modbus1.SetParity((UART_Parity)Memory[eMemory::ParityCOM1].U);
@@ -160,7 +168,7 @@ void LoopTask(void *argument) {
 		taskYIELD();
 		osDelay(5);
 	}
-
+  
 }
 
 void ExchangeTask(void *argument) {
@@ -173,51 +181,61 @@ void ExchangeTask(void *argument) {
 							BaseDevice::Devices[i]->Adress, BaseDevice::Devices[i]->Exchange[n].FirstReg,
 							BaseDevice::Devices[i]->Exchange[n].NReg, BaseDevice::Devices[i]->Exchange[n].pBuff
 						);
-					osDelay(300);
+					osDelay(500);
 				}
 				else { BaseDevice::Devices[i]->ErrorConnection = false; }
 
-				if(BaseDevice::Devices[i]->ErrorConnection || !BaseDevice::Devices[i]->Enable) {
-					memset(BaseDevice::Devices[i]->Exchange[n].pBuff, 0, BaseDevice::Devices[i]->Exchange[n].NReg*2);
-				}
+//				if(BaseDevice::Devices[i]->ErrorConnection || !BaseDevice::Devices[i]->Enable) {
+//					memset(BaseDevice::Devices[i]->Exchange[n].pBuff, 0, BaseDevice::Devices[i]->Exchange[n].NReg*2);
+//				}
 			}
 		}
 
-		WriteBuf_t temp;
-
 		for(uint16_t n = 0; n < 4; n++) {
-			if(B118[n].Enable && !B118[n].ErrorConnection && !B118[n].Mem.State.State) {
-				if(abs(B118[n].Mem.Uout - B118[n].pSettings[*B118[n].pRegime]->Uset) >= 7) {
-					temp.Adress = B118[n].Adress;
-					temp.AdrReg = B118[n].Exchange[0].FirstReg + (&B118[n].Mem.Uout - B118[n].Exchange[0].pBuff);
-					temp.Value  = B118[n].pSettings[*B118[n].pRegime]->Uset;
-					osMessageQueuePut(WriteBufHandle, (void*)&temp, 0, 5);
-				}
-				if(B118[n].Mem.Imax != B118[n].pSettings[*B118[n].pRegime]->Iset) {
-					temp.Adress = B118[n].Adress;
-					temp.AdrReg = B118[n].Exchange[0].FirstReg + (&B118[n].Mem.Imax - B118[n].Exchange[0].pBuff);
-					temp.Value  = B118[n].pSettings[*B118[n].pRegime]->Iset;
-					osMessageQueuePut(WriteBufHandle, (void*)&temp, 0, 5);
-				}
-				if(B118[n].Mem.Umax != B118[n].pSettings[*B118[n].pRegime]->Umax) {
-					temp.Adress = B118[n].Adress;
-					temp.AdrReg = B118[n].Exchange[0].FirstReg + (&B118[n].Mem.Umax - B118[n].Exchange[0].pBuff);
-					temp.Value  = B118[n].pSettings[*B118[n].pRegime]->Umax;
-					osMessageQueuePut(WriteBufHandle, (void*)&temp, 0, 5);
-				}
-				if(B118[n].Mem.Umin != B118[n].pSettings[*B118[n].pRegime]->Umin) {
-					temp.Adress = B118[n].Adress;
-					temp.AdrReg = B118[n].Exchange[0].FirstReg + (&B118[n].Mem.Umin - B118[n].Exchange[0].pBuff);
-					temp.Value  = B118[n].pSettings[*B118[n].pRegime]->Umin;
-					osMessageQueuePut(WriteBufHandle, (void*)&temp, 0, 5);
-				}
-			}
+//
+			WriteBuf_t temp;
+// раньше применяли в китайцах
+//			if(B118[n].Enable && !B118[n].ErrorConnection && !B118[n].Mem.State.State) {
+//				if(abs(B118[n].Mem.Uout - B118[n].pSettings[*B118[n].pRegime]->Uset) >= 30) {
+//					temp.Adress = n + 1;
+//					temp.AdrReg = 0;
+//					temp.Value  = B118[n].pSettings[*B118[n].pRegime]->Uset;
+//					//osMessageQueuePut(WriteBufHandle, &temp, 0, 5);
+//					write(temp);
+//					//break;
+//				}
+//				if(B118[n].Mem.Imax != B118[n].pSettings[*B118[n].pRegime]->Iset) {
+//					temp.Adress = n + 1;
+//					temp.AdrReg = 2;
+//					temp.Value  = B118[n].pSettings[*B118[n].pRegime]->Iset;
+//					//osMessageQueuePut(WriteBufHandle, &temp, 0, 5);
+//					write(temp);
+//					//break;
+//				}
+//				if(B118[n].Mem.Umax != B118[n].pSettings[*B118[n].pRegime]->Umax) {
+//					temp.Adress = n + 1;
+//					temp.AdrReg = 3;
+//					temp.Value  = B118[n].pSettings[*B118[n].pRegime]->Umax;
+//					//osMessageQueuePut(WriteBufHandle, &temp, 0, 5);
+//					write(temp);
+//					//break;
+//				}
+//				if(B118[n].Mem.Umin != B118[n].pSettings[*B118[n].pRegime]->Umin) {
+//					temp.Adress = n + 1;
+//					temp.AdrReg = 4;
+//					temp.Value  = B118[n].pSettings[*B118[n].pRegime]->Umin;
+//					//osMessageQueuePut(WriteBufHandle, &temp, 0, 5);
+//					write(temp);
+//					//break;
+//				}
+//			}
 			if(B118[n].Enable && !B118[n].ErrorConnection) {
 				if(B118[n].Mem.State.State != *B118[n].pPusk) {
-					temp.Adress = B118[n].Adress;
-					temp.AdrReg = B118[n].Exchange[0].FirstReg + ((uint16_t*)&B118[n].Mem.State - B118[n].Exchange[0].pBuff);
+					temp.Adress = n + 1;
+					temp.AdrReg = 5;
 					temp.Value  = *B118[n].pPusk;
-					osMessageQueuePut(WriteBufHandle, (void*)&temp, 0, 5);
+					osMessageQueuePut(WriteBufHandle, &temp, 0, 5);
+					//break;
 				}
 			}
 		}
@@ -238,13 +256,21 @@ void ExchangeTask(void *argument) {
 			else break;
 		}
 
+		WriteBuf_t temp;
 		while(osMessageQueueGetCount(WriteBufHandle)) {
 			osMessageQueueGet(WriteBufHandle, &temp, NULL, 5);
 			if(Modbus2.WriteHoldingRegister(temp.Adress, temp.AdrReg, temp.Value)) {
-				osDelay(300);
+				osDelay(500);
 			}
 		}
 	}
+}
+
+void write(WriteBuf_t temp) {
+//	if(Modbus2.WriteHoldingRegister(temp.Adress, temp.AdrReg, temp.Value)) {
+//		osDelay(500);
+//	}
+	osMessageQueuePut(WriteBufHandle, &temp, 0, 5);
 }
 
 void ShowDefault(void *argument) {
