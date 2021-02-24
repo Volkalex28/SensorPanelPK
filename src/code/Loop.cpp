@@ -23,8 +23,6 @@
 #include "ScreenMain.h"
 #include "ScreenContrlInsulation.h"
 
-etl::vector<uint8_t, 10> v = {0};
-
 Memory_un Memory[17000] = {};
 uint16_t Buf[4000] = {};
 
@@ -32,7 +30,7 @@ bool CrashBattery = true;
 
 using namespace VA;
 
-GUI Screens(11);
+GUI Screens(1);
 
 ScreenGlobal Global;									//0
 ScreenMenu Menu;										//1
