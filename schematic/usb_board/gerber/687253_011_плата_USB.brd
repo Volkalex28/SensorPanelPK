@@ -1,0 +1,21 @@
+G04 DipTrace 3.2.0.1*
+G04 687253_011_плата_USB.brd*
+%MOMM*%
+G04 #@! TF.FileFunction,Drawing,Board polygon*
+G04 #@! TF.Part,Single*
+%FSLAX35Y35*%
+G04*
+G71*
+G90*
+G75*
+G01*
+G04 BoardPoly*
+%LPD*%
+G36*
+X1000000Y1000000D2*
+Y2500000D1*
+X12300000D1*
+Y1000000D1*
+X1000000D1*
+G37*
+M02*
