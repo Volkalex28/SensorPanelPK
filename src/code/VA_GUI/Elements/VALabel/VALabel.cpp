@@ -7,23 +7,29 @@
 
 #include "VALabel.h"
 
-namespace VA {
+namespace VA
+{
 
 // 1 - 15 * 30
 // 2 - 24 * 48
 // 3 - 32 * 64
-void Label::Show() {
-	if(this->converting) return;
+void Label::Show()
+{
 
 	uint16_t n_col_space = GetPtrFont(this->Font, this->FontForm)[0x20][0];
 
-	for(uint8_t i = 0; i < this->_string.size(); i++) {
+	std::vector<std::vector<std::vector<std::vector<FillPixels>>>> _string;
+	std::vector<std::vector<uint16_t>> len_string;
+
+	this->UpdateText(_string, len_string);
+
+	for(uint8_t i = 0; i < _string.size(); i++) {
 
 		int16_t length = 0;
-		for(uint8_t n = 0; n < this->len_string[i].size(); n++) {
-			length += this->len_string[i][n];
+		for(uint8_t n = 0; n < len_string[i].size(); n++) {
+			length += len_string[i][n];
 		}
-		length += n_col_space*(this->len_string[i].size()-1);
+		length += n_col_space*(len_string[i].size()-1);
 		//if(length < 0) length = 0;
 
 		int16_t x = 0, y = 0;
@@ -44,48 +50,42 @@ void Label::Show() {
 			y = this->GetY() + this->scale * 16 * i;
 			break;
 		case VALabelAlignY::CenterY :
-			y = this->GetY() + this->GetH() / (this->_string.size() + 1) * (i + 1) - this->scale * 8;
+			y = this->GetY() + this->GetH() / (_string.size() + 1) * (i + 1) - this->scale * 8;
 			break;
 		case VALabelAlignY::Bottom :
-			y = this->GetY() + this->GetH() - this->scale * 16 * (this->_string.size() - i);
+			y = this->GetY() + this->GetH() - this->scale * 16 * (_string.size() - i);
 			break;
 		}
 		uint16_t len = 0;
-		uint16_t n_end = this->_string[i].size();
-		for(uint8_t n = 0; n < n_end; n++) {
-			for(uint8_t row = 0; row < 16; row++) for(uint8_t col = 0; col < this->_string[i][n][row].size(); col++) {
-				for(uint8_t py = 0; py < this->scale; py++) {
-					BaseElement::ptft->drawPixels(
-						this->Colour,
-						this->scale*this->_string[i][n][row][col].count,
-						x + this->scale*(this->_string[i][n][row][col].offset + len),
-						y + row*this->scale + py
-					);
+		uint16_t n_end = _string[i].size();
+		for(uint8_t n = 0; n < n_end; n++)
+		{
+			for(uint8_t row = 0; row < 16; row++) for(uint8_t col = 0; col < _string[i][n][row].size(); col++)
+			{
+				for(uint8_t py = 0; py < this->scale; py++)
+				{
+					BaseElement::ptft->drawPixels(this->Colour,
+						this->scale*_string[i][n][row][col].count,
+						x + this->scale*(_string[i][n][row][col].offset + len),
+						y + row*this->scale + py);
 				}
 			}
-			len += this->len_string[i][n] + n_col_space;
+			len += len_string[i][n] + n_col_space;
 		}
 	}
 }
 
-std::string Label::GetText(void) {
-	return this->string;
-}
+std::string Label::GetText(void) { return this->string; }
 
-void Label::SetText(std::string string) {
-	if (this->string != string) {
-		this->string = string;
-		this->UpdateText();
-	}
-}
+void Label::SetText(std::string string) { this->string = string; }
 
-void Label::UpdateText() {
-	this->converting = true;
-	std::vector<std::vector<std::vector<std::vector<FillPixels>>>> temp_string = {};
-	std::vector<std::vector<uint16_t>> temp_len_string = {};
+void Label::UpdateText(std::vector<std::vector<std::vector<std::vector<FillPixels>>>> & temp_string,
+	std::vector<std::vector<uint16_t>> & temp_len_string)
+{
 
 	std::vector<std::string> str = this->CutString(&this->string, '\n');
-	for(uint16_t i = 0; i < str.size(); i++) {
+	for(uint16_t i = 0; i < str.size(); i++)
+	{
 		temp_string.push_back(std::vector<std::vector<std::vector<FillPixels>>>());
 		temp_len_string.push_back(std::vector<uint16_t>());
 
@@ -93,13 +93,17 @@ void Label::UpdateText() {
 		this->StrToBitmap(words, temp_string[i], temp_len_string[i]);
 
 		uint16_t n_col_space = GetPtrFont(this->Font, this->FontForm)[0x20][0];
-		for(uint16_t j = 0; j < temp_string.size(); j++) {
+		for(uint16_t j = 0; j < temp_string.size(); j++)
+		{
 			uint16_t length = 0;
-			for(uint8_t n = 0; n < temp_string[j].size(); n++) {
-				if(length + temp_len_string[j][n] * this->scale <= this->GetW() || length == 0) {
+			for(uint8_t n = 0; n < temp_string[j].size(); n++)
+			{
+				if(length + temp_len_string[j][n] * this->scale <= this->GetW() || length == 0)
+				{
 					length += (temp_len_string[j][n] + n_col_space) * this->scale;
 				}
-				else {
+				else
+				{
 					std::vector<std::vector<std::vector<FillPixels>>> temp(temp_string[j].begin() + n, temp_string[j].end());
 					std::vector<uint16_t> len_temp(temp_len_string[j].begin() + n, temp_len_string[j].end());
 
@@ -114,20 +118,11 @@ void Label::UpdateText() {
 			}
 		}
 	}
-	str.clear();
-	this->_string.clear();
-	this->len_string.clear();
-
-	this->_string = temp_string;
-	this->len_string = temp_len_string;
-
-	temp_string.clear();
-	temp_len_string.clear();
-
-	this->converting = false;
 }
 
-void Label::StrToBitmap(const std::vector<std::string>& str, std::vector<std::vector<std::vector<FillPixels>>>& _string, std::vector<uint16_t>& len_string) {
+void Label::StrToBitmap(const std::vector<std::string>& str, std::vector<std::vector<std::vector<FillPixels>>>& _string,
+		std::vector<uint16_t>& len_string)
+{
 
 	TCLISTP* pFont = GetPtrFont(this->Font, this->FontForm);
 	for (const auto& word : str) {
@@ -136,20 +131,23 @@ void Label::StrToBitmap(const std::vector<std::string>& str, std::vector<std::ve
 		std::vector<std::vector<FillPixels>> str_row_fillpixels(16, std::vector<FillPixels>(0));
 
 		uint16_t len = 0;
-		for(const auto& symbol : nums_sym) {
-
+		for(const auto& symbol : nums_sym)
+		{
 			uint8_t n_col = pFont[symbol][0];
 			uint8_t n_bytes = (n_col+7)/8;
 
-			for(int row = 0; row < 16; row++) {
-
+			for(int row = 0; row < 16; row++)
+			{
 				uint32_t sym = 0;
-				for(uint8_t byte = 0; byte < n_bytes; byte++) {
+				for(uint8_t byte = 0; byte < n_bytes; byte++)
+				{
 					sym += (pFont[symbol][1 + byte + row*n_bytes] << (byte*8));
 				}
 				bool pixel = false;
-				for(uint8_t col = 0; col < n_col+1; col++) {
-					if(sym & (1 << col) && !pixel) {
+				for(uint8_t col = 0; col < n_col+1; col++)
+				{
+					if(sym & (1 << col) && !pixel)
+					{
 						pixel = true;
 						FillPixels temp;
 						temp.offset = col + len;
@@ -157,7 +155,8 @@ void Label::StrToBitmap(const std::vector<std::string>& str, std::vector<std::ve
 						str_row_fillpixels[row].push_back(temp);
 					}
 					if(!(sym & (1 << col)) && pixel) { pixel = false; }
-					if(pixel) {
+					if(pixel)
+					{
 						str_row_fillpixels[row][str_row_fillpixels[row].size()-1].count++;
 					}
 				}
@@ -169,31 +168,38 @@ void Label::StrToBitmap(const std::vector<std::string>& str, std::vector<std::ve
 	}
 }
 
-std::vector<uint8_t> Label::ToWin1251(const std::string& textUTF8) {
-    std::vector<uint8_t> textWin1251 = {};
+std::vector<uint8_t> Label::ToWin1251(const std::string& textUTF8)
+{
+	std::vector<uint8_t> textWin1251;
 
-    for(auto IT = textUTF8.begin(); IT != textUTF8.end();) {
+    for(auto IT = textUTF8.begin(); IT != textUTF8.end();)
+    {
 
     	uint32_t num_end = *IT++;
 		uint8_t mask = 0xFF;
 		int8_t counter = 0;
 
-		for (int i = 7; num_end & (1 << i); i--) {
+		for (int i = 7; num_end & (1 << i); i--)
+		{
 			counter++;
 			mask &= ~(1 << i);
 		}
 		num_end &= mask;
 
-		if (counter--) {
+		if (counter--)
+		{
 			num_end <<= (6 * counter);
-			while (counter--) {
+			while (counter--)
+			{
 				num_end += (*IT++ & 0x7F) << (6 * counter);
 			}
 		}
 
 		if (num_end >= 0x0410 && num_end <= 0x044F) { num_end -= 0x0350; }
-		else if (num_end > 0x7F) {
-			try {
+		else if (num_end > 0x7F)
+		{
+			try
+			{
 				static std::map<uint32_t, uint8_t> conv = {    { 0x0402, 0x80 }, { 0x0403, 0x81 },
 					{ 0x201A, 0x82 }, { 0x0453, 0x83 }, { 0x201E, 0x84 }, { 0x2026, 0x85 },
 					{ 0x2020, 0x86 }, { 0x2021, 0x87 }, { 0x20AC, 0x88 }, { 0x2030, 0x89 },
@@ -213,11 +219,9 @@ std::vector<uint8_t> Label::ToWin1251(const std::string& textUTF8) {
 				};
 				num_end = conv[num_end];
 			}
-			catch (...) {
-				num_end = 0;
-			}
+			catch (...) { num_end = 0; }
 		}
-		if (num_end == 0) num_end = 0x20;
+		if (num_end == 0) { num_end = 0x20; }
 
         textWin1251.push_back(num_end);
     }
@@ -225,12 +229,14 @@ std::vector<uint8_t> Label::ToWin1251(const std::string& textUTF8) {
     return textWin1251;
 }
 
-std::vector<std::string> Label::CutString(std::string* str, char sym) {
+std::vector<std::string> Label::CutString(std::string* str, char sym)
+{
 	std::vector<std::string> temp = {};
 
 	std::size_t _pos = 0;
 	std::size_t pos = 0;
-	while(pos < str->size()) {
+	while(pos < str->size())
+	{
 
 		pos = std::distance(str->cbegin(), std::find(str->cbegin() + _pos, str->cend(), sym));
 
@@ -239,6 +245,5 @@ std::vector<std::string> Label::CutString(std::string* str, char sym) {
 	}
 	return temp;
 }
-
 
 } /* namespace VA */

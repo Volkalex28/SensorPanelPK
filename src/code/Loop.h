@@ -2,12 +2,12 @@
  * Loop.h
  *
  *  Created on: Nov 10, 2020
- *      Author: anan2
+ *      Author: ans0l
  */
 
 #pragma once
 
-//#define CHINA
+#define CHINA
 
 #include "main.h"
 #include "VAGUI.h"
@@ -41,7 +41,11 @@ enum eMemory {
 	ParityCOM2,
 	SlaveIdCOM2,
 
-	RegimeB118 = 100,   // режимы В118 220
+	RegimeB118 = 100,   	// режимы В118 220
+
+
+
+
 /*-------------------------------- Подзаряд   ------------------------------------------------ */
 	MaxVoltageRecharge,
 	VoltageRecharge,
@@ -57,7 +61,7 @@ enum eMemory {
 	CurrentBoostCharge,
 	MinCurrentBoostCharge,
 
-	RegimeB118M,   // режимы В118 110
+	RegimeB118M,   			// режимы В118 110
 
 /*-------------------------------- Подзаряд M (110) ------------------------------------------------ */
 	MaxVoltageRechargeM,
@@ -100,5 +104,5 @@ enum rMemory {
 };
 
 extern Memory_un Memory[17000];
-extern uint16_t Buf[4000];
+//extern uint16_t Buf[4000];
 extern GUI Screens;

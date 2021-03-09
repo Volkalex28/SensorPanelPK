@@ -20,8 +20,8 @@ class ScreenBKI : public BaseScreen {
 	uint32_t counter = 1;		//
 
 /*-----------------------Вертикальные линии -------------------------------------------------------------------*/
-	Graphics Vline1 	= Graphics(this, 205, 65, 5, 350, RA8875_BLACK, Figure::rect, 0, true);
-	Graphics Vline2 	= Graphics(this, 410, 65, 5, 350, RA8875_BLACK, Figure::rect, 0, true);
+	Graphics Vline1 	= Graphics(this, 215, 65, 5, 350, RA8875_BLACK, Figure::rect, 0, true);
+	Graphics Vline2 	= Graphics(this, 420, 65, 5, 350, RA8875_BLACK, Figure::rect, 0, true);
 	Graphics Vline3 	= Graphics(this, 620, 65, 5, 350, RA8875_BLACK, Figure::rect, 0, true);
 
 /*-----------------------Горизонтальные линии ----------------------------------------------------------------*/
@@ -35,24 +35,24 @@ class ScreenBKI : public BaseScreen {
 
 /*----------------------------------------------------------------------------------------------------------------*/
 	Label lfider[3] = {
-		Label(this, 10, 65, 300, 65, "Напряжение первой секции", Fonts::TimesNewRoman, FontForms::Normal,
+		Label(this, 10, 65, 200, 65, "Напряжение первой секции", Fonts::TimesNewRoman, FontForms::Normal,
 			VALabelScale::S2, VALabelAlignX::Left, VALabelAlignY::CenterY),
-		Label(this, 10, 185, 300, 65, "Сопротивление первой секции", Fonts::TimesNewRoman, FontForms::Normal,
+		Label(this, 10, 185, 200, 65, "Сопротивление первой секции", Fonts::TimesNewRoman, FontForms::Normal,
 			VALabelScale::S2, VALabelAlignX::Left, VALabelAlignY::CenterY),
-		Label(this, 10, 300, 300, 65, "Напряжение первой секции", Fonts::TimesNewRoman, FontForms::Normal,
+		Label(this, 10, 300, 200, 65, "Напряжение первой секции", Fonts::TimesNewRoman, FontForms::Normal,
 			VALabelScale::S2, VALabelAlignX::Left, VALabelAlignY::CenterY),
 	};
 
 /*----------------------------------------------------------------------------------------------------------------*/
 	Label section[6] = {
-		Label(this, 235, 65, 300, 65, "Основная шина", Fonts::TimesNewRoman, FontForms::Normal,
+		Label(this, 235, 65, 200, 65, "Основная шина", Fonts::TimesNewRoman, FontForms::Normal,
 			VALabelScale::S2, VALabelAlignX::Left, VALabelAlignY::CenterY),
 		Label(this, 235, 185, 300, 65, "+ Полюса", Fonts::TimesNewRoman, FontForms::Normal,
 			VALabelScale::S2, VALabelAlignX::Left, VALabelAlignY::CenterY),
 		Label(this, 235, 300, 300, 65, "+ Полюса", Fonts::TimesNewRoman, FontForms::Normal,
 			VALabelScale::S2, VALabelAlignX::Left, VALabelAlignY::CenterY),
 /*----------------------------------------------------------------------------------------------------------------*/
-		Label(this, 440, 65, 300, 65, "Дополнительная шина", Fonts::TimesNewRoman, FontForms::Normal,
+		Label(this, 440, 65, 200, 65, "Доп. шина", Fonts::TimesNewRoman, FontForms::Normal,
 			VALabelScale::S2, VALabelAlignX::Left, VALabelAlignY::CenterY),
 		Label(this, 440, 185, 300, 65, "- Полюса", Fonts::TimesNewRoman, FontForms::Normal,
 			VALabelScale::S2, VALabelAlignX::Left, VALabelAlignY::CenterY),
@@ -92,9 +92,9 @@ class ScreenBKI : public BaseScreen {
 
 public:
 
-	ScreenBKI(void) : BaseScreen(&Screens, "Блок контроля изоляции: ") {
-		//this->bBKI.addCallBack([]() { Screens.JumpScreen(&sContrlInsulation); });
-		//this->bSetBKI.addCallBack([]() { Screens.JumpScreen(&sContrlInsulation); });
+	ScreenBKI(void) : BaseScreen(&Screens, "Блок контроля изоляции ") {
+//		this->bBKI.addCallBack([]() { Screens.JumpScreen(&sContrlInsulation); });
+//		this->bSetBKI.addCallBack([]() { Screens.JumpScreen(&sContrlInsulation); });
 
 	}
 

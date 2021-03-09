@@ -1,13 +1,5 @@
-/*
- * Loop.cpp
- *
- *  Created on: Nov 10, 2020
- *      Author: anan2
- */
 
 #include "Loop.h"
-
-#include "./etl/vector.h"
 
 #include "ScreenGlobal.h"
 #include "ScreenMenu.h"
@@ -22,6 +14,8 @@
 #include "ScreenBattery.h"
 #include "ScreenMain.h"
 #include "ScreenContrlInsulation.h"
+#include "ScreenBKI.h"
+
 
 Memory_un Memory[17000] = {};
 uint16_t Buf[4000] = {};
@@ -30,7 +24,7 @@ bool CrashBattery = true;
 
 using namespace VA;
 
-GUI Screens(1);
+GUI Screens(6);
 
 ScreenGlobal Global;									//0
 ScreenMenu Menu;										//1
@@ -43,8 +37,11 @@ ScreenEvents sEvents;									//7
 ScreenZVU sZVU;											//8
 ScreenSettZVU sSettZVU;									//9
 ScreenBattery sBatteryControl;							//10
-//ScreenMain sMain;										//11
+ScreenMain sMain;										//11
 ScreenContrlInsulation sContrlInsulation;				//12
+
+ScreenBKI sBKI;											//13
+
 
 WindowReboot Reboot;
 
@@ -126,10 +123,10 @@ void Setup(void) {
 void LoopTask(void *argument) {
 
 	while(true) {
-		Screens.Global.Loop();
-		if(Screens.GetPtrCurrentScreen() != &sZVU) {
-			sZVU.Loop();
-		}
+//		Screens.Global.Loop();
+//		if(Screens.GetPtrCurrentScreen() != &sZVU) {
+//			sZVU.Loop();
+//		}
 		Memory[rMemory::VoltageB118].U = sZVU.OutputVoltage;
 		Memory[rMemory::CurrentB118].U = sZVU.OutputCurrent;
 		Memory[rMemory::Crash].U = !Global.indCrash.state;
@@ -165,10 +162,10 @@ void LoopTask(void *argument) {
 		HAL_GPIO_WritePin(OUT1_GPIO_Port, OUT1_Pin, Global.indCrash.state ? GPIO_PIN_RESET : GPIO_PIN_SET);
 		HAL_GPIO_WritePin(OUT2_GPIO_Port, OUT2_Pin, Global.indCrash.state ? GPIO_PIN_RESET : GPIO_PIN_SET);
 
-		taskYIELD();
+		//taskYIELD();
 		osDelay(5);
 	}
-  
+
 }
 
 void ExchangeTask(void *argument) {
@@ -263,6 +260,7 @@ void ExchangeTask(void *argument) {
 				osDelay(500);
 			}
 		}
+		osDelay(1);
 	}
 }
 
@@ -276,8 +274,12 @@ void write(WriteBuf_t temp) {
 void ShowDefault(void *argument) {
 
 	while(true) {
-		osDelay(5);
+		osDelay(3);
 		Screens.Touched();
+		Screens.Global.Loop();
+		if(Screens.GetPtrCurrentScreen() != &sZVU) {
+			sZVU.Loop();
+		}
 		Screens.ShowScreen();
 		HAL_IWDG_Refresh(&hiwdg);
 	}

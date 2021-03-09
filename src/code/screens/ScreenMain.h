@@ -9,11 +9,11 @@
 
 using namespace VA;
 
-	uint16_t val = 0;
+
 
 class ScreenMain : public BaseScreen {
 
-
+	uint16_t val = 0;
 public:
 
 	Graphics Vline1 	= Graphics(this, 180, 65, 2, 285, RA8875_BLACK, Figure::rect, 0, true);
@@ -26,7 +26,7 @@ public:
 	Graphics Hline4 	= Graphics(this, 0, 350, 520, 2, RA8875_BLACK, Figure::rect, 0, true);
 
 
-	Label lVoltage		= Label(this, 180, 65, 200, 70, "Напряжение",  Fonts::TimesNewRoman, FontForms::Normal,
+	Label lVoltage		 = Label(this, 180, 65, 200, 70, "Напряжение",  Fonts::TimesNewRoman, FontForms::Normal,
 							VALabelScale::S2, VALabelAlignX::CenterX, VALabelAlignY::CenterY, 0x00);
 	Label lCurrent 		= Label(this, 380, 65, 140, 70, "Ток",  Fonts::TimesNewRoman, FontForms::Normal,
 							VALabelScale::S2, VALabelAlignX::CenterX, VALabelAlignY::CenterY, 0x00);

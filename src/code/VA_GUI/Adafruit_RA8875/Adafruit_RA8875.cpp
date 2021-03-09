@@ -594,11 +594,11 @@ void Adafruit_RA8875::pushPixels(uint32_t num, uint16_t p) {
     Fill the screen with the current color
 */
 /**************************************************************************/
-void Adafruit_RA8875::fillRect(void) {
-	this->writeCommand(RA8875_DCR);
-	this->writeData(RA8875_DCR_LINESQUTRI_STOP | RA8875_DCR_DRAWSQUARE);
-	this->writeData(RA8875_DCR_LINESQUTRI_START | RA8875_DCR_FILL | RA8875_DCR_DRAWSQUARE);
-}
+// void Adafruit_RA8875::fillRect(void) {
+// 	this->writeCommand(RA8875_DCR);
+// 	this->writeData(RA8875_DCR_LINESQUTRI_STOP | RA8875_DCR_DRAWSQUARE);
+// 	this->writeData(RA8875_DCR_LINESQUTRI_START | RA8875_DCR_FILL | RA8875_DCR_DRAWSQUARE);
+// }
 
 /**************************************************************************/
 /*!
@@ -1704,17 +1704,18 @@ void Adafruit_RA8875::layerEffect(RA8875Layers efx) {
 void Adafruit_RA8875::writeTo(RA8875Layers d) {
 	uint16_t temp = this->readReg(RA8875_MWCR1);
 	temp &= ~(3<<2);// Clear bits 3 and 2
-	switch(d){
-		case LAYER1:
-			temp &= ~(1<<0); //clear bit 0
-			_currentLayer = 0;
+	switch(d)
+  {
+  case LAYER1:
+    temp &= ~(1<<0); //clear bit 0
+    _currentLayer = 0;
 		break;
-		case LAYER2:
-			temp |= (1<<0); //bit set 0
-			_currentLayer = 1;
+  case LAYER2:
+    temp |= (1<<0); //bit set 0
+    _currentLayer = 1;
 		break;
-		default:
-			return;
+  default:
+    return;
 	}
 	this->writeData(temp);
 }

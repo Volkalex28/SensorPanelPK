@@ -18,7 +18,7 @@
 #include "ScreenSettZVU.h"
 #include "ScreenZVU.h"
 #include "ScreenBattery.h"
-
+#include "ScreenMain.h"
 
 using namespace VA;
 
@@ -31,6 +31,7 @@ extern ScreenCrash sCrash;
 extern ScreenZVU sZVU;
 extern ScreenSettZVU sSettZVU;
 extern ScreenBattery sBatteryControl;
+//extern ScreenMain sMain;
 
 class ScreenGlobal {
 
@@ -80,46 +81,24 @@ public:
 
 		this->menu.addCallBack([]() { Screens.JumpScreen(&Menu); });
 		this->back.addCallBack([]() {
-			if (Screens.GetPtrCurrentScreen() == &Menu) {
+			if (Screens.GetPtrCurrentScreen() == &Menu)
+			{
 				Screens.JumpScreen((int)0);
 				return;
 			}
-			if (Screens.GetPtrCurrentScreen() == &sCrash) {
-				Screens.JumpScreen(&Menu);
-				return;
-			}
-			if (Screens.GetPtrCurrentScreen() == &sEvents) {
-				Screens.JumpScreen(&Menu);
-				return;
-			}
-			if (Screens.GetPtrCurrentScreen() == &SystemSett) {
-				Screens.JumpScreen(&Menu);
-				return;
-			}
-			if (Screens.GetPtrCurrentScreen() == &SetTime) {
-				Screens.JumpScreen(&SystemSett);
-				return;
-			}
-			if (Screens.GetPtrCurrentScreen() == &COMSett) {
-				Screens.JumpScreen(&SystemSett);
-				return;
-			}
-			if (Screens.GetPtrCurrentScreen() == &Autorization) {
-				Screens.JumpScreen(&SystemSett);
-				return;
-			}
-			if (Screens.GetPtrCurrentScreen() == &sZVU) {
-				Screens.JumpScreen(&Menu);
-				return;
-			}
-			if (Screens.GetPtrCurrentScreen() == &sSettZVU) {
-				Screens.JumpScreen(&sZVU);
-				return;
-			}
-			if (Screens.GetPtrCurrentScreen() == &sBatteryControl) {
-				Screens.JumpScreen(&Menu);
-				return;
-			}
+			std::map<BaseScreen*, BaseScreen*> jump = {
+				{&sCrash, 		&Menu},
+				{&sEvents, 		&Menu},
+				{&SystemSett, 	&Menu},
+				{&SetTime,		&SystemSett},
+				{&COMSett,		&SystemSett},
+				{&Autorization,	&SystemSett},
+				{&sZVU,			&Menu},
+				{&sSettZVU,		&sZVU},
+				{&sBatteryControl, &Menu},
+				{&sMain, 		&Menu}
+			};
+			Screens.JumpScreen(jump[Screens.GetPtrCurrentScreen()]);
 		});
 	}
 };

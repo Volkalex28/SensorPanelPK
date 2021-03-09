@@ -5,7 +5,7 @@
  *      Author: ans0ld
  */
 
-#pragma once
+
 
 #pragma once
 
@@ -156,7 +156,7 @@ public:
 			else { this->counter = this->Max; }
 
 		});
-
+// --------  Установка прав администратора на функциональную кнопку (кнопка внесения уставок)---------------------------------//
 		this->bControl.SetShowed(false);
 		this->bControl.addCallBack([&]() {
 			if(Screens.GetLevelAcces() == LevelsAcces::Admin) {

@@ -30,6 +30,7 @@
 /* USER CODE END Includes */
 
 /* Private typedef -----------------------------------------------------------*/
+typedef StaticTask_t osStaticThreadDef_t;
 typedef StaticQueue_t osStaticMessageQDef_t;
 typedef StaticTimer_t osStaticTimerDef_t;
 /* USER CODE BEGIN PTD */
@@ -52,36 +53,62 @@ typedef StaticTimer_t osStaticTimerDef_t;
 /* USER CODE END Variables */
 /* Definitions for showTask */
 osThreadId_t showTaskHandle;
+uint32_t showTaskBuffer[ 2048 ];
+osStaticThreadDef_t showTaskControlBlock;
 const osThreadAttr_t showTask_attributes = {
   .name = "showTask",
+  .cb_mem = &showTaskControlBlock,
+  .cb_size = sizeof(showTaskControlBlock),
+  .stack_mem = &showTaskBuffer[0],
+  .stack_size = sizeof(showTaskBuffer),
   .priority = (osPriority_t) osPriorityNormal,
-  .stack_size = 2048 * 4
 };
 /* Definitions for loopTask */
 osThreadId_t loopTaskHandle;
+uint32_t loopTaskBuffer[ 1024 ];
+osStaticThreadDef_t loopTaskControlBlock;
 const osThreadAttr_t loopTask_attributes = {
   .name = "loopTask",
+  .cb_mem = &loopTaskControlBlock,
+  .cb_size = sizeof(loopTaskControlBlock),
+  .stack_mem = &loopTaskBuffer[0],
+  .stack_size = sizeof(loopTaskBuffer),
   .priority = (osPriority_t) osPriorityLow,
-  .stack_size = 1024 * 4
 };
 /* Definitions for exchangeTask */
 osThreadId_t exchangeTaskHandle;
+uint32_t exchangeTaskBuffer[ 256 ];
+osStaticThreadDef_t exchangeTaskControlBlock;
 const osThreadAttr_t exchangeTask_attributes = {
   .name = "exchangeTask",
+  .cb_mem = &exchangeTaskControlBlock,
+  .cb_size = sizeof(exchangeTaskControlBlock),
+  .stack_mem = &exchangeTaskBuffer[0],
+  .stack_size = sizeof(exchangeTaskBuffer),
   .priority = (osPriority_t) osPriorityLow,
-  .stack_size = 512 * 4
 };
 /* Definitions for eepromTask */
 osThreadId_t eepromTaskHandle;
+uint32_t eepromTaskBuffer[ 256 ];
+osStaticThreadDef_t eepromTaskControlBlock;
 const osThreadAttr_t eepromTask_attributes = {
   .name = "eepromTask",
+  .cb_mem = &eepromTaskControlBlock,
+  .cb_size = sizeof(eepromTaskControlBlock),
+  .stack_mem = &eepromTaskBuffer[0],
+  .stack_size = sizeof(eepromTaskBuffer),
   .priority = (osPriority_t) osPriorityHigh,
-  .stack_size = 512 * 4
 };
 /* Definitions for WriteBuf */
 osMessageQueueId_t WriteBufHandle;
+uint8_t WriteBufBuffer[ 30 * sizeof( WriteBuf_t ) ];
+osStaticMessageQDef_t WriteBufControlBlock;
 const osMessageQueueAttr_t WriteBuf_attributes = {
-  .name = "WriteBuf"
+  .name = "WriteBuf",
+  .cb_mem = &WriteBufControlBlock,
+  .cb_size = sizeof(WriteBufControlBlock),
+  .mq_mem = &WriteBufBuffer,
+  .mq_size = sizeof(WriteBufBuffer)
 };
 /* Definitions for EEPBuf */
 osMessageQueueId_t EEPBufHandle;

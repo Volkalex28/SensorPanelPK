@@ -20,17 +20,18 @@ void GUI::Init() {
 	this->tft.PWM1config(true, RA8875_PWM_CLK_DIV1024); // PWM output for backlight
 	this->tft.touchEnable(true);
 	//this->tft.PWM1out(255);
-	this->tft.writeTo(LAYER2);
-	this->tft.fillScreen(RA8875_BLACK);
-	this->tft.writeTo(LAYER1);
-	this->tft.fillScreen(RA8875_BLACK);
 
 	this->JumpScreen(this->startScreen);
+
+	this->tft.writeTo(LAYER1);
+	this->tft.fillScreen(0xB5B6);
+	this->tft.writeTo(LAYER2);
+	this->tft.fillScreen(0xB5B6);
 }
 
 void GUI::ShowScreen() {
 
-	static uint16_t CurrentLayer = RA8875Layers::LAYER2;
+	static uint16_t CurrentLayer = RA8875Layers::LAYER1;
 
 	if(this->sleep == false) {
 		this->tft.writeTo((RA8875Layers)CurrentLayer);

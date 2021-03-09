@@ -7,18 +7,23 @@
 
 #include "Elements/Graphics/Graphics.h"
 
-namespace VA {
+namespace VA 
+{
 
-void Graphics::Show() {
+Graphics::Graphics(void) 
+{ /* There's nothing here */ }
 
-	switch(this->figure) {
+void Graphics::Show() 
+{
+	switch(this->figure) 
+  {
 	case Figure::line :
-		BaseElement::ptft->drawLine(this->GetX(),this->GetY(), this->GetX() + this->GetW(), this->GetY() + this->GetH(), this->colour);
-
-
+		BaseElement::ptft->drawLine(this->GetX(), this->GetY(), this->GetX() + this->GetW(),
+      this->GetY() + this->GetH(), this->colour);
 		break;
+
 	case Figure::rect :
-		if (this->fill== false) {
+		if(this->fill == false) {
 			BaseElement::ptft->drawRect(this->GetX(),this->GetY(), this->GetW(), this->GetH(), this->colour);
 		}
 		else

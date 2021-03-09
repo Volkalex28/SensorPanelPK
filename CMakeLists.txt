@@ -26,37 +26,18 @@ set(MIDDLE_DIR ${SOURCE_DIR}/middlewares)
 set(CORE_DIR ${SOURCE_DIR}/core)
 set(CODE_DIR ${SOURCE_DIR}/code)
 
-
-file(GLOB SOURCE
+file(GLOB_RECURSE SOURCE 
+  ${CODE_DIR}/*.c
   ${CORE_DIR}/*.c
-  ${DRIVER_DIR}/STM32F7xx_HAL_Driver/Src/*.c
-  ${MIDDLE_DIR}/Third_Party/FreeRTOS/Source/*.c
-  ${MIDDLE_DIR}/Third_Party/FreeRTOS/Source/portable/GCC/ARM_CM7/r0p1/*.c
-  ${MIDDLE_DIR}/Third_Party/FreeRTOS/Source/portable/MemMang/*.c
-  ${MIDDLE_DIR}/Third_Party/FreeRTOS/Source/CMSIS_RTOS_V2/*.c
+  ${DRIVER_DIR}/*.c
+  ${MIDDLE_DIR}/*.c
 
   ${CODE_DIR}/*.cpp
-  ${CODE_DIR}/screens/*.cpp
-  ${CODE_DIR}/devices/*.cpp
-  ${CODE_DIR}/VA_EEPROM_AT25640/*.cpp
-  ${CODE_DIR}/VA_Modbus/*.cpp
-
-  ${CODE_DIR}/VA_GUI/*.cpp
-  ${CODE_DIR}/VA_GUI/Adafruit_RA8875/*.cpp
-  ${CODE_DIR}/VA_GUI/Window/*.cpp
-  ${CODE_DIR}/VA_GUI/Screens/*.cpp
-  ${CODE_DIR}/VA_GUI/Fonts/*.cpp
-  ${CODE_DIR}/VA_GUI/Fonts/TimesNewRoman/*.c
-
-  ${CODE_DIR}/VA_GUI/Elements/*.cpp
-  ${CODE_DIR}/VA_GUI/Elements/Graphics/*.cpp
-  ${CODE_DIR}/VA_GUI/Elements/VAButton/*.cpp
-  ${CODE_DIR}/VA_GUI/Elements/VACanvas/*.cpp
-  ${CODE_DIR}/VA_GUI/Elements/VADisplay/*.cpp
-  ${CODE_DIR}/VA_GUI/Elements/VAIndicator/*.cpp
-  ${CODE_DIR}/VA_GUI/Elements/VAKeyboard/*.cpp
-  ${CODE_DIR}/VA_GUI/Elements/VALabel/*.cpp
+  ${CORE_DIR}/*.cpp
+  ${DRIVER_DIR}/*.cpp
+  ${MIDDLE_DIR}/*.cpp
 )
+
 set(STARTUP
   ${CORE_DIR}/startup_stm32f746zetx.s
 )
@@ -89,7 +70,35 @@ target_include_directories(${PROJECT_NAME} PRIVATE
   ${SOURCE_DIR}/etl/include
 )
 
+set_target_properties(${PROJECT_NAME} PROPERTIES
+  C_STANDARD ${CMAKE_C_STANDARD}
 
+  if(CMAKE_C_STANDARD_REQUIRED)
+    C_STANDARD_REQUIRED YES
+  else()
+    C_STANDARD_REQUIRED NO
+  endif()
+
+  if(CMAKE_C_EXTENSIONS)
+    C_EXTENSIONS YES
+  else()
+    C_EXTENSIONS NO
+  endif()
+  
+  CXX_STANDARD ${CMAKE_CXX_STANDARD}
+
+  if(CMAKE_CXX_STANDARD_REQUIRED)
+    CXX_STANDARD_REQUIRED YES
+  else()
+    CXX_STANDARD_REQUIRED NO
+  endif()
+
+  if(CMAKE_CXX_EXTENSIONS)
+    CXX_EXTENSIONS YES
+  else()
+    CXX_EXTENSIONS NO
+  endif()
+)
 
 target_compile_options(${PROJECT_NAME} PRIVATE
   -mcpu=cortex-m7

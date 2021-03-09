@@ -103,6 +103,9 @@ public:
 			for(uint8_t i = 0; i < 3; i++) {
 				number = this->counter + i - 3;
 				this->lfider[i].SetText("Сопротивление\n" + std::to_string(number + 1) + "-го фидера");
+//				this->Value[i] = DCXJ.Mem.cellVoltage[number];
+//				uint64_t* status = (uint64_t*)&DCXJ.Mem.sCellBattery;
+//				this->ind[i].state = (*status) & (1 << number);
 			}
 	}
 

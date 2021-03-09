@@ -59,7 +59,7 @@ public:
 #ifdef CHINA
 		this->Name = "Блок B118-" + std::to_string(this->Adress - 6);
 #else
-		this->Name = "Блок B130-" + std::to_string(this->Adress - 4);
+		this->Name = "Блок B130-" + std::to_string(this->Adress - 0);
 #endif
 	}
 
@@ -83,5 +83,5 @@ public:
 #ifdef CHINA
 uint16_t DeviceB118::mAdress = 7;
 #else
-uint16_t DeviceB118::mAdress = 5;
+uint16_t DeviceB118::mAdress = 1;
 #endif

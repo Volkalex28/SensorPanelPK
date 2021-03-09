@@ -69,7 +69,7 @@ public:
 };
 
 
-uint16_t AnalogBlock::mAdress = 36;
+uint16_t DeviceB118::mAdress = 36;
 
 
 

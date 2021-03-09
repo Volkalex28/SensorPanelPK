@@ -9,15 +9,38 @@
 
 #include "ScreenZVU.h"
 #include "Loop.h"
-
+//#include "DeviceB118.h";
 
 using namespace VA;
 
 #define min 0
 #define max 3000
 
+void write(WriteBuf_t temp);
 
 class ScreenSettZVU : public BaseScreen {
+
+	void _write(uint16_t Reg, uint16_t Val, uint16_t Regime) {
+		WriteBuf_t temp;
+		temp.AdrReg = Reg;
+		temp.Value = Val;
+		if(this->chosenDevise == 0) {
+			if(Memory[eMemory::RegimeB118].U == Regime) {
+				temp.Adress = 1;
+				write(temp);
+				temp.Adress = 2;
+				write(temp);
+				temp.Adress = 3;
+				write(temp);
+			}
+		}
+		else {
+			if(Memory[eMemory::RegimeB118M].U == Regime) {
+				temp.Adress = 4;
+				write(temp);
+			}
+		}
+	}
 
 public:
 
@@ -83,9 +106,11 @@ public:
 
     	this->disp[0].addCallBack([&]() {
     		 eeprom.Write(this->disp[0].GetPValue());
+    		 this->_write(3, *this->disp[0].GetPValue(), 0);
 		});
     	this->disp[1].addCallBack([&]() {
 			 eeprom.Write(this->disp[1].GetPValue());
+			 this->_write(4, *this->disp[1].GetPValue(), 0);
 		});
     	//---------------------------------------------------------------------------//
     	this->disp[2].addCallBack([&]() {
@@ -97,9 +122,11 @@ public:
     	//---------------------------------------------------------------------------//
     	this->disp[4].addCallBack([&]() {
 			 eeprom.Write(this->disp[4].GetPValue());
+    		 this->_write(3, *this->disp[4].GetPValue(), 0);
 		});
     	this->disp[5].addCallBack([&]() {
 			 eeprom.Write(this->disp[5].GetPValue());
+			 this->_write(4, *this->disp[5].GetPValue(), 0);
 		});
     	//---------------------------------------------------------------------------//
 		this->disp[6].addCallBack([&]() {
@@ -113,21 +140,25 @@ public:
 		this->drechargeVoltage.SetLevelAcces(LevelsAcces::User);
 		this->drechargeVoltage.addCallBack([&]() {
 			 eeprom.Write(this->drechargeVoltage.GetPValue());
+			 this->_write(0, *this->drechargeVoltage.GetPValue(), 0);
 		});
 
 		this->drechargeCurrent.SetLevelAcces(LevelsAcces::User);
 		this->drechargeCurrent.addCallBack([&]() {
-			 eeprom.Write(this->drechargeCurrent.GetPValue());
+			eeprom.Write(this->drechargeCurrent.GetPValue());
+			this->_write(2, *this->drechargeCurrent.GetPValue(), 0);
 		});
 
 		this->dboostChargeVoltage.SetLevelAcces(LevelsAcces::User);
 		this->dboostChargeVoltage.addCallBack([&]() {
-			 eeprom.Write(this->dboostChargeVoltage.GetPValue());
+			eeprom.Write(this->dboostChargeVoltage.GetPValue());
+			this->_write(0, *this->dboostChargeVoltage.GetPValue(), 1);
 		});
 
 		this->dboostChargeCurrent.SetLevelAcces(LevelsAcces::User);
 		this->dboostChargeCurrent.addCallBack([&]() {
 			eeprom.Write(this->dboostChargeCurrent.GetPValue());
+			this->_write(2, *this->dboostChargeCurrent.GetPValue(), 1);
 		});
 
 //-------------------------------------------------------------------------------//
@@ -141,7 +172,8 @@ public:
 				Memory[eMemory::RegimeB118M].U = 0;
 				eeprom.Write(&Memory[eMemory::RegimeB118M].U);
 			}
-
+			this->_write(0, *this->drechargeVoltage.GetPValue(), 0);
+			this->_write(2, *this->drechargeCurrent.GetPValue(), 0);
 		});
 		this->bBoostCharge.SetLevelAcces(LevelsAcces::User);
 		this->bBoostCharge.addCallBack([&]() {
@@ -153,6 +185,8 @@ public:
 				Memory[eMemory::RegimeB118M].U = 1;
 				eeprom.Write(&Memory[eMemory::RegimeB118M].U);
 			}
+			this->_write(0, *this->dboostChargeVoltage.GetPValue(), 1);
+			this->_write(2, *this->dboostChargeCurrent.GetPValue(), 1);
 		});
 	}
 

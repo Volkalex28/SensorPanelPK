@@ -29,7 +29,6 @@ extern "C" {
 
 /* Includes ------------------------------------------------------------------*/
 #include "stm32f7xx_hal.h"
-#include "stm32f7xx_hal.h"
 
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
@@ -97,6 +96,7 @@ void SPI_SetPol_HIGH(SPI_HandleTypeDef* hspi);
 
 void VA_UART_TxCpltCallback(UART_HandleTypeDef *huart);
 void VA_USART_IRQHandler(UART_HandleTypeDef *huart);
+
 /* USER CODE END EFP */
 
 /* Private defines -----------------------------------------------------------*/

@@ -1,6 +1,7 @@
 #include "ScreenCOM.h"
 
-ScreenCOM::ScreenCOM(): BaseScreen(&Screens, "Параметры СОМ") {
+
+ScreenCOM::ScreenCOM(): BaseScreen(&Screens, "Параметры СОМ"){
 	this->bRateM.addCallBack([&]() {
 				if(this->SpeedCOMindex - 1 >= 0) {
 					Memory[eMemory::BaudRateCOM1].U = this->SpeedCOM.at(--this->SpeedCOMindex);
@@ -51,48 +52,4 @@ ScreenCOM::ScreenCOM(): BaseScreen(&Screens, "Параметры СОМ") {
 			this->bParityM.SetLevelAcces(LevelsAcces::User);
 			this->bParityP.SetLevelAcces(LevelsAcces::User);
 			this->dSlaveId.SetLevelAcces(LevelsAcces::User);
-}
-
-void ScreenCOM::Loop(void) {
-
-		for(	this->SpeedCOMindex = 0;
-				this->SpeedCOM[this->SpeedCOMindex] != Memory[eMemory::BaudRateCOM1].U &&
-						this->SpeedCOMindex < this->SpeedCOM.size();
-				this->SpeedCOMindex++
-			);
-		if(this->SpeedCOMindex == this->SpeedCOM.size()) {
-			this->SpeedCOMindex = 0;
-		}
-
-		this->lRate.SetText(std::to_string(Memory[eMemory::BaudRateCOM1].U*100));
-
-		if(Memory[eMemory::ParityCOM1].U == (uint16_t)UART_Parity::None) { this->lParity.SetText("Нет\n(None)"); }
-		else if(Memory[eMemory::ParityCOM1].U == (uint16_t)UART_Parity::Odd) { this->lParity.SetText("Нечетный\n(Odd)"); }
-		else { this->lParity.SetText("Четный\n(Even)"); }
-
-		static bool rate = false;
-		if(this->toEEPROMRate) {
-			if(!rate) {
-				this->rectRate.Open();
-				this->addElement(&this->lRate);
-				rate = true;
-			}
-		}
-		else {
-			this->rectRate.Close();
-			rate = false;
-		}
-
-		static bool parity = false;
-		if(this->toEEPROMParity) {
-			if(!parity) {
-				this->rectParity.Open();
-				this->addElement(&this->lParity);
-				parity = true;
-			}
-		}
-		else {
-			this->rectParity.Close();
-			parity = false;
-		}
 }

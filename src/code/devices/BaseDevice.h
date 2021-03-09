@@ -2,7 +2,7 @@
  * BaseDevice.h
  *
  *  Created on: Dec 6, 2020
- *      Author: anan2
+ *      Author: ans0l
  */
 
 #pragma once
@@ -28,9 +28,9 @@ public:
 	bool Enable = true;
 
 	struct RegistersExchange {
-		uint16_t FirstReg;
-		uint8_t NReg;
-		uint16_t* pBuff;
+		uint16_t FirstReg; 			// первый регистр
+		uint8_t NReg;				// количество регистров
+		uint16_t* pBuff;			// буфер
 	};
 	std::vector<RegistersExchange> Exchange = {};
 

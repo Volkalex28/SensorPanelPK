@@ -34,17 +34,20 @@ class Label: public BaseElement {
 	uint16_t Colour;
 
 	struct FillPixels {
-		uint16_t count;
+		uint8_t count;
 		uint16_t offset;
 	};
 
-	std::vector<std::vector<std::vector<std::vector<FillPixels>>>> _string;
-	std::vector<std::vector<uint16_t>> len_string;
+	//etl::vector<etl::vector<etl::vector<etl::vector<FillPixels, 25>, 16>, 10>, 5> _string;
+	//etl::vector<etl::vector<uint16_t, 10>, 5> len_string;
 
-	void UpdateText(void);
+	void UpdateText(std::vector<std::vector<std::vector<std::vector<FillPixels>>>> & temp_string,
+			std::vector<std::vector<uint16_t>> & temp_len_string);
 	std::vector<uint8_t> ToWin1251(const std::string& textUTF8);
 	std::vector<std::string> CutString(std::string* str, char sym);
-	void StrToBitmap(const std::vector<std::string>& str, std::vector<std::vector<std::vector<FillPixels>>>& _string, std::vector<uint16_t>& len_string);
+	void StrToBitmap(const std::vector<std::string>& str,
+			std::vector<std::vector<std::vector<FillPixels>>> & _string,
+			std::vector<uint16_t> & len_string);
 
 	bool converting = false;
 

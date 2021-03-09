@@ -107,12 +107,12 @@ public:
 
 	template<typename T>
 	void addCallBack(T* ptr, void (T::*ExternalCallback)(void)) {
-      this->ExternalCallBack.add(ptr, ExternalCallback);
+        this->ExternalCallBack.add(ptr, ExternalCallback);
 	}
 	template<typename T>
-  void addCallBack(T ExternalCallback) {
-      this->ExternalCallBack.add(ExternalCallback);
-  }
+    void addCallBack(T ExternalCallback) {
+        this->ExternalCallBack.add(ExternalCallback);
+    }
 
 	virtual void CallBack(void);
 

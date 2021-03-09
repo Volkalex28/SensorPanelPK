@@ -106,7 +106,7 @@ int main(void)
   MX_RTC_Init();
   MX_IWDG_Init();
   /* USER CODE BEGIN 2 */
- // HAL_GPIO_WritePin(OUT1_GPIO_Port, OUT1_Pin, GPIO_PIN_SET);
+  HAL_GPIO_WritePin(OUT1_GPIO_Port, OUT1_Pin, GPIO_PIN_SET);
   /* USER CODE END 2 */
 
   /* Init scheduler */
