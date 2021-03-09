@@ -42,10 +42,6 @@ enum eMemory {
 	SlaveIdCOM2,
 
 	RegimeB118 = 100,   	// режимы В118 220
-
-
-
-
 /*-------------------------------- Подзаряд   ------------------------------------------------ */
 	MaxVoltageRecharge,
 	VoltageRecharge,
@@ -81,6 +77,24 @@ enum eMemory {
 	SettingBatteryDCXJ = 140,
 	ToleranceBatteryDCXJ,
 	N_SectionDCXJ,
+/*-------------------------------- Аналоговая плата  ---------------------------------------------- */
+	CoefX1 = 150,
+	CoefX2,
+	CoefX3,
+	CoefX11,
+	CoefX12,
+	CoefX13,
+	MinSetWarnEC1,
+	MaxSetWarnEC1,
+	MinSetWarnEC2,
+	MaxSetWarnEC2,
+	MinSetWarnAB,
+
+	MinSetCrashEC1,
+	MaxSetCrashEC1,
+	MinSetCrashEC2,
+	MaxSetCrashEC2,
+	MinSetCrashAB,
 
 /*-------------------------------- События   ---------------------------------------------- */
 	nEvent = 198,

@@ -15,7 +15,9 @@
 #include "ScreenMain.h"
 #include "ScreenContrlInsulation.h"
 #include "ScreenBKI.h"
-
+#include "ScreenAnalogPl.h"
+#include "ScreenAnalogCoef.h"
+#include "ScreenSetAnalogPl.h"
 
 Memory_un Memory[17000] = {};
 uint16_t Buf[4000] = {};
@@ -24,7 +26,7 @@ bool CrashBattery = true;
 
 using namespace VA;
 
-GUI Screens(6);
+GUI Screens(16);
 
 ScreenGlobal Global;									//0
 ScreenMenu Menu;										//1
@@ -39,8 +41,10 @@ ScreenSettZVU sSettZVU;									//9
 ScreenBattery sBatteryControl;							//10
 ScreenMain sMain;										//11
 ScreenContrlInsulation sContrlInsulation;				//12
-
 ScreenBKI sBKI;											//13
+ScreenAnalogPl	sAnalogPl;								//14
+ScreenAnalogCoef sAnalogCoef;							//15
+ScreenSetAnalogPl sSetAnalogPl;							//16
 
 
 WindowReboot Reboot;
@@ -65,12 +69,13 @@ DeviceB118 B118[4] = {
 };
 DeviceDCXJ DCXJ;
 
+
 void Setup(void) {
 
 	eeprom.Reads(0, rMemory::StartAdress);
 
 	if(Memory[0].U != 0x112 || Memory[3].U != 0x163) {
-		uint16_t Buf1[] = { 50, 5, 0, 0, 192, 0, 100, 96, 1, 100 };
+		uint16_t Buf1[] = { 55, 5, 0, 0, 192, 0, 100, 96, 1, 100 };
 		uint16_t Buf2[] = { 0, 2600, 2310, 1900, 1050, 1000, 100, 2800, 2420, 2000, 1050, 1000, 100 };
 
 		eeprom.Writes(10, sizeof(Buf1)/2, Buf1);
@@ -83,7 +88,7 @@ void Setup(void) {
 
 		EraseEvent();
 	}
-
+	osDelay(50);
 	Screens.Init();
 	Screens.SetBackLight(Memory[eMemory::Backlight].U);
 	Screens.SetTimeOut(Memory[eMemory::TimeOut].U);
@@ -123,10 +128,10 @@ void Setup(void) {
 void LoopTask(void *argument) {
 
 	while(true) {
-//		Screens.Global.Loop();
-//		if(Screens.GetPtrCurrentScreen() != &sZVU) {
-//			sZVU.Loop();
-//		}
+		Screens.Global.Loop();
+		if(Screens.GetPtrCurrentScreen() != &sZVU) {
+			sZVU.Loop();
+		}
 		Memory[rMemory::VoltageB118].U = sZVU.OutputVoltage;
 		Memory[rMemory::CurrentB118].U = sZVU.OutputCurrent;
 		Memory[rMemory::Crash].U = !Global.indCrash.state;
@@ -162,8 +167,8 @@ void LoopTask(void *argument) {
 		HAL_GPIO_WritePin(OUT1_GPIO_Port, OUT1_Pin, Global.indCrash.state ? GPIO_PIN_RESET : GPIO_PIN_SET);
 		HAL_GPIO_WritePin(OUT2_GPIO_Port, OUT2_Pin, Global.indCrash.state ? GPIO_PIN_RESET : GPIO_PIN_SET);
 
-		//taskYIELD();
-		osDelay(5);
+		taskYIELD();
+		osDelay(50);
 	}
 
 }
@@ -191,7 +196,6 @@ void ExchangeTask(void *argument) {
 		for(uint16_t n = 0; n < 4; n++) {
 //
 			WriteBuf_t temp;
-// раньше применяли в китайцах
 //			if(B118[n].Enable && !B118[n].ErrorConnection && !B118[n].Mem.State.State) {
 //				if(abs(B118[n].Mem.Uout - B118[n].pSettings[*B118[n].pRegime]->Uset) >= 30) {
 //					temp.Adress = n + 1;
@@ -260,7 +264,6 @@ void ExchangeTask(void *argument) {
 				osDelay(500);
 			}
 		}
-		osDelay(1);
 	}
 }
 
@@ -274,12 +277,8 @@ void write(WriteBuf_t temp) {
 void ShowDefault(void *argument) {
 
 	while(true) {
-		osDelay(3);
+		osDelay(5);
 		Screens.Touched();
-		Screens.Global.Loop();
-		if(Screens.GetPtrCurrentScreen() != &sZVU) {
-			sZVU.Loop();
-		}
 		Screens.ShowScreen();
 		HAL_IWDG_Refresh(&hiwdg);
 	}
@@ -308,6 +307,7 @@ void VA_UART_TxCpltCallback(UART_HandleTypeDef *huart) {
 	Modbus1.Modbus_TxCpltCallback(huart);
 	Modbus2.Modbus_TxCpltCallback(huart);
 }
+
 void VA_USART_IRQHandler(UART_HandleTypeDef *huart) {
 	Modbus1.Modbus_IRQHandler(huart);
 	Modbus2.Modbus_IRQHandler(huart);

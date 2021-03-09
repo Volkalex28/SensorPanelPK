@@ -19,6 +19,12 @@
 #include "ScreenZVU.h"
 #include "ScreenBattery.h"
 #include "ScreenMain.h"
+#include "ScreenContrlInsulation.h"
+#include "ScreenBKI.h"
+#include "ScreenAnalogPl.h"
+#include "ScreenAnalogCoef.h"
+#include "ScreenSetAnalogPl.h"
+
 
 using namespace VA;
 
@@ -31,7 +37,10 @@ extern ScreenCrash sCrash;
 extern ScreenZVU sZVU;
 extern ScreenSettZVU sSettZVU;
 extern ScreenBattery sBatteryControl;
-//extern ScreenMain sMain;
+extern ScreenMain sMain;
+extern ScreenAnalogPl	sAnalogPl;								
+extern ScreenAnalogCoef sAnalogCoef;							
+extern ScreenSetAnalogPl sSetAnalogPl;
 
 class ScreenGlobal {
 
@@ -87,16 +96,19 @@ public:
 				return;
 			}
 			std::map<BaseScreen*, BaseScreen*> jump = {
-				{&sCrash, 		&Menu},
-				{&sEvents, 		&Menu},
-				{&SystemSett, 	&Menu},
-				{&SetTime,		&SystemSett},
-				{&COMSett,		&SystemSett},
-				{&Autorization,	&SystemSett},
-				{&sZVU,			&Menu},
-				{&sSettZVU,		&sZVU},
-				{&sBatteryControl, &Menu},
-				{&sMain, 		&Menu}
+				{&sCrash, 			&Menu},
+				{&sEvents, 			&Menu},
+				{&SystemSett, 		&Menu},
+				{&SetTime,			&SystemSett},
+				{&COMSett,			&SystemSett},
+				{&Autorization,		&SystemSett},
+				{&sZVU,				&Menu},
+				{&sSettZVU,			&sZVU},
+				{&sBatteryControl, 	&Menu},
+				{&sMain, 			&Menu},
+				{&sAnalogPl, 		&Menu},
+				{&sAnalogCoef, 		&sAnalogPl},
+				{&sSetAnalogPl, 	&sAnalogPl}
 			};
 			Screens.JumpScreen(jump[Screens.GetPtrCurrentScreen()]);
 		});
