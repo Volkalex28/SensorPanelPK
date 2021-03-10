@@ -1,0 +1,32 @@
+BasedOnStyle: LLVM
+
+AccessModifierOffset: -2
+IndentWidth: 2
+ColumnLimit: 85
+# AlignAfterOpenBracket: DontAlign
+
+ConstructorInitializerIndentWidth: 2
+ContinuationIndentWidth: 2
+Cpp11BracedListStyle: false
+FixNamespaceComments: true
+
+ContinuationIndentWidth: 2
+
+BinPackArguments: false
+BinPackParameters: true
+PointerAlignment: Middle
+
+AlwaysBreakAfterReturnType: None
+AlwaysBreakTemplateDeclarations: Yes
+BreakBeforeBraces: Allman
+
+AllowShortFunctionsOnASingleLine: All
+AllowShortIfStatementsOnASingleLine: true
+AllowShortLoopsOnASingleLine: true
+AllowShortBlocksOnASingleLine: true
+
+AlignTrailingComments: true
+AlignConsecutiveMacros: true
+AlignConsecutiveAssignments: true   
+BreakConstructorInitializers: BeforeColon
+ConstructorInitializerAllOnOneLineOrOnePerLine: false

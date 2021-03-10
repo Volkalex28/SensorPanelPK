@@ -23,23 +23,17 @@ set(CMAKE_EXECUTABLE_SUFFIX ".elf")
 set(SOURCE_DIR ${CMAKE_SOURCE_DIR}/src)
 set(DRIVER_DIR ${SOURCE_DIR}/drivers)
 set(MIDDLE_DIR ${SOURCE_DIR}/middlewares)
-set(CORE_DIR ${SOURCE_DIR}/core)
-set(CODE_DIR ${SOURCE_DIR}/code)
+set(PINIT_DIR  ${SOURCE_DIR}/peripheral)
+# set(CORE_DIR ${SOURCE_DIR}/core)
+# set(CODE_DIR ${SOURCE_DIR}/code)
 
 file(GLOB_RECURSE SOURCE 
-  ${CODE_DIR}/*.c
-  ${CORE_DIR}/*.c
-  ${DRIVER_DIR}/*.c
-  ${MIDDLE_DIR}/*.c
-
-  ${CODE_DIR}/*.cpp
-  ${CORE_DIR}/*.cpp
-  ${DRIVER_DIR}/*.cpp
-  ${MIDDLE_DIR}/*.cpp
+  ${SOURCE_DIR}/*.c
+  ${SOURCE_DIR}/*.cpp
 )
 
 set(STARTUP
-  ${CORE_DIR}/startup_stm32f746zetx.s
+  ${SOURCE_DIR}/startup_stm32f746zetx.s
 )
 
 set(EXECUTABLE ${EXECUTABLE_OUTPUT_PATH}/${PROJECT_NAME})
@@ -53,21 +47,21 @@ target_compile_definitions(${PROJECT_NAME} PRIVATE
 )
 
 target_include_directories(${PROJECT_NAME} PRIVATE
-  ${SOURCE_DIR}/core
-  ${SOURCE_DIR}/code/devices
-  ${SOURCE_DIR}/code/screens
-  ${SOURCE_DIR}/code/windows
-  ${SOURCE_DIR}/code/VA_GUI
-  ${SOURCE_DIR}/code/VA_EEPROM_AT25640
-  ${SOURCE_DIR}/code
+  # ${SOURCE_DIR}/core
+  # ${SOURCE_DIR}/code/devices
+  # ${SOURCE_DIR}/code/screens
+  # ${SOURCE_DIR}/code/windows
+  # ${SOURCE_DIR}/code/VA_GUI
+  # ${SOURCE_DIR}/code/VA_EEPROM_AT25640
+  # ${SOURCE_DIR}/code
+  ${SOURCE_DIR}
   ${SOURCE_DIR}/drivers/STM32F7xx_HAL_Driver/Inc
   ${SOURCE_DIR}/drivers/STM32F7xx_HAL_Driver/Inc/Legacy
   ${SOURCE_DIR}/drivers/CMSIS/Device/ST/STM32F7xx/Include
   ${SOURCE_DIR}/drivers/CMSIS/Include
-  ${SOURCE_DIR}/middlewares/Third_Party/FreeRTOS/Source/include
-  ${SOURCE_DIR}/middlewares/Third_Party/FreeRTOS/Source/CMSIS_RTOS_V2
-  ${SOURCE_DIR}/middlewares/Third_Party/FreeRTOS/Source/portable/GCC/ARM_CM7/r0p1
-  ${SOURCE_DIR}/etl/include
+  # ${SOURCE_DIR}/middlewares/Third_Party/FreeRTOS/Source/include
+  # ${SOURCE_DIR}/middlewares/Third_Party/FreeRTOS/Source/CMSIS_RTOS_V2
+  # ${SOURCE_DIR}/middlewares/Third_Party/FreeRTOS/Source/portable/GCC/ARM_CM7/r0p1
 )
 
 set_target_properties(${PROJECT_NAME} PROPERTIES
@@ -112,12 +106,12 @@ target_compile_options(${PROJECT_NAME} PRIVATE
 #  -fno-rtti
 #  -fno-use-cxa-atexit
   -Wall
-#  -Winline
+  -Winline
   -fstack-usage
 
   --specs=nano.specs
 
-  $<$<CONFIG:Debug>: -Ofast>
+  $<$<CONFIG:Debug>: -O0>
   $<$<CONFIG:Release>: -Ofast>
 )
 
