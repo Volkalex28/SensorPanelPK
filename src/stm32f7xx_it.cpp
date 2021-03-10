@@ -9,6 +9,10 @@
 
 #include "peripheral/pinit.hpp"
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 /******************************************************************************/
 /*           Cortex-M7 Processor Interruption and Exception Handlers          */
 /******************************************************************************/
@@ -226,6 +230,9 @@ void DMA2_Stream7_IRQHandler(void)
   /* USER CODE END DMA2_Stream7_IRQn 1 */
 }
 
+#ifdef __cplusplus
+}
+#endif
 /* USER CODE BEGIN 1 */
 
 /* USER CODE END 1 */
