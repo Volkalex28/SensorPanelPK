@@ -74,6 +74,7 @@ enum eMemory {
 	CurrentBoostChargeM,
 	MinCurrentBoostChargeM,
 
+/*-------------------------------- Контроль АКБ---------------------------------------------- */
 	SettingBatteryDCXJ = 140,
 	ToleranceBatteryDCXJ,
 	N_SectionDCXJ,
@@ -95,6 +96,11 @@ enum eMemory {
 	MinSetCrashEC2,
 	MaxSetCrashEC2,
 	MinSetCrashAB,
+/*-------------------------------- БКИ---------------------------------------------- */
+	numBKI = 170,
+	coefBKI,
+	warnInsulation,
+	crashInsulation,
 
 /*-------------------------------- События   ---------------------------------------------- */
 	nEvent = 198,

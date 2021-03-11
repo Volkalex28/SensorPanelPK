@@ -58,7 +58,7 @@ public:
 		uint16_t Umin2;
 		uint16_t Umax2;
 		uint16_t Umin3;
-		uint16_t AI1;
+		uint16_t AI1; //17
 		uint16_t AI2;
 		uint16_t AI3;
 		uint16_t AI11;

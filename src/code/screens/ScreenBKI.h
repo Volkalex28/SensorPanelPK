@@ -9,8 +9,10 @@
 
 #include "Loop.h"
 #include "ScreenContrlInsulation.h"
+#include "ScreenSetBKI.h"
 
 extern ScreenContrlInsulation sContrlInsulation;
+extern ScreenSetBKI sSetBKI;
 
 using namespace VA;
 
@@ -93,8 +95,8 @@ class ScreenBKI : public BaseScreen {
 public:
 
 	ScreenBKI(void) : BaseScreen(&Screens, "Блок контроля изоляции ") {
-//		this->bBKI.addCallBack([]() { Screens.JumpScreen(&sContrlInsulation); });
-//		this->bSetBKI.addCallBack([]() { Screens.JumpScreen(&sContrlInsulation); });
+		this->bBKI.addCallBack([]() { Screens.JumpScreen(&sContrlInsulation); });
+		this->bSetBKI.addCallBack([]() { Screens.JumpScreen(&sSetBKI); });
 
 	}
 

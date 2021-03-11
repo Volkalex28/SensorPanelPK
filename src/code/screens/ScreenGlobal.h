@@ -24,6 +24,8 @@
 #include "ScreenAnalogPl.h"
 #include "ScreenAnalogCoef.h"
 #include "ScreenSetAnalogPl.h"
+#include "ScreenSetBKI.h"
+#include "ScreenAnalogTestIO.h"
 
 
 using namespace VA;
@@ -38,9 +40,13 @@ extern ScreenZVU sZVU;
 extern ScreenSettZVU sSettZVU;
 extern ScreenBattery sBatteryControl;
 extern ScreenMain sMain;
+extern ScreenContrlInsulation sContrlInsulation;
+extern ScreenBKI sBKI;
 extern ScreenAnalogPl	sAnalogPl;								
 extern ScreenAnalogCoef sAnalogCoef;							
 extern ScreenSetAnalogPl sSetAnalogPl;
+extern ScreenSetBKI sSetBKI;
+extern ScreenAnalogTestIO sAnalogTestIO;
 
 class ScreenGlobal {
 
@@ -107,8 +113,12 @@ public:
 				{&sBatteryControl, 	&Menu},
 				{&sMain, 			&Menu},
 				{&sAnalogPl, 		&Menu},
+				{&sBKI, 			&Menu},
 				{&sAnalogCoef, 		&sAnalogPl},
-				{&sSetAnalogPl, 	&sAnalogPl}
+				{&sSetAnalogPl, 	&sAnalogPl},
+				{&sAnalogTestIO, 	&sAnalogPl},
+				{&sContrlInsulation,&sBKI},
+				{&sSetBKI, 			&sBKI}
 			};
 			Screens.JumpScreen(jump[Screens.GetPtrCurrentScreen()]);
 		});

@@ -114,8 +114,8 @@ class ScreenBattery : public BaseScreen {
 					VALabelScale::S2, VALabelAlignX::Left, VALabelAlignY::CenterY),
 			Label(this, 320, 300, 300, 65, "Секция", Fonts::TimesNewRoman, FontForms::Normal,
 					VALabelScale::S2, VALabelAlignX::Left, VALabelAlignY::CenterY),
-
 	};
+
 	Label Units[6] = {
 			Label(this, 210, 136, 50, 30, "B", Fonts::TimesNewRoman, FontForms::Normal,
 					VALabelScale::S2, VALabelAlignX::Left, VALabelAlignY::CenterY),
@@ -130,7 +130,6 @@ class ScreenBattery : public BaseScreen {
 					VALabelScale::S2, VALabelAlignX::Left, VALabelAlignY::CenterY),
 			Label(this, 520, 367, 50, 30, "B", Fonts::TimesNewRoman, FontForms::Normal,
 					VALabelScale::S2, VALabelAlignX::Left, VALabelAlignY::CenterY),
-
 	};
 
 	uint16_t Value[6] = {};

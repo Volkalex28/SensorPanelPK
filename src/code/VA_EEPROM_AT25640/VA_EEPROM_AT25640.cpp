@@ -59,13 +59,14 @@ uint8_t EEPROM_AT25640::GetStatus(void) {
 void EEPROM_AT25640::Reads(uint16_t AdrReg, uint16_t Size) {
 	uint8_t EEPROM_SPI_Write[] = {
 		R_EEPROM,
+		0,
 		(uint8_t)(AdrReg*2 >> 8 & 0xFF),
 		(uint8_t)(AdrReg*2 & 0xFF)
 	};
 	std::vector<uint8_t> ReadBuff(Size*2, 0);
 
 	this->Select();
-	HAL_SPI_Transmit(this->hspi, EEPROM_SPI_Write, 3, 1000);
+	HAL_SPI_Transmit(this->hspi, EEPROM_SPI_Write, 4, 1000);
 	HAL_SPI_Receive(this->hspi, &ReadBuff[0], Size*2, 10000);
 	this->DeSelect();
 
@@ -94,8 +95,10 @@ void EEPROM_AT25640::Update(void) {
 
 		uint8_t EEPROM_SPI_Write[] = {
 			WR_EEPROM,
+			0,
 			(uint8_t)(Reg.Adress*2 >> 8 & 0xFF),
 			(uint8_t)(Reg.Adress*2 & 0xFF),
+
 			(uint8_t)(Reg.Value >> 8 & 0xFF),
 			(uint8_t)(Reg.Value & 0xFF)
 		};
@@ -106,7 +109,5 @@ void EEPROM_AT25640::Update(void) {
 		this->DeSelect();
 	}
 }
-
-
 
 } /* namespace VA */

@@ -7,13 +7,14 @@
 
 #pragma once
 
+#include "Loop.h"
+#include "AnalogBlock.h"
+
 using namespace VA;
 
+extern AnalogBlock AnalogBl;
 
 
-class ScreenMain : public BaseScreen {
-
-	uint16_t val = 0;
 public:
 
 	Graphics Vline1 	= Graphics(this, 180, 65, 2, 285, RA8875_BLACK, Figure::rect, 0, true);
@@ -41,12 +42,12 @@ public:
 							VALabelScale::S2, VALabelAlignX::CenterX, VALabelAlignY::CenterY, 0x00);
 
 
-	 Display BusIVolt 	= Display(this, 200, 145, 100, 50, &val, 4, 1, 0, 00, nullptr);
-	 Display BusICurr 	= Display(this, 400, 145, 80, 50, &val, 4, 1, 0, 00, nullptr);
-	 Display BusIIVolt 	= Display(this, 200, 215, 100, 50, &val, 4, 1, 0, 00, nullptr);
-	 Display BusIICurr 	= Display(this, 400, 215, 80, 50, &val, 4, 1, 0, 00, nullptr);
-	 Display AB_Volt 	= Display(this, 200, 285, 100, 50, &val, 4, 1, 0, 00, nullptr);
-	 Display AB_Curr 	= Display(this, 400, 285, 80, 50, &val, 4, 1, 0, 00, nullptr);
+	 Display BusIVolt 	= Display(this, 200, 145, 100, 50, &Value[0], 4, 1, 0, 00, nullptr);
+	 Display BusICurr 	= Display(this, 400, 145, 80, 50, &Value[1], 4, 1, 0, 00, nullptr);
+	 Display BusIIVolt 	= Display(this, 200, 215, 100, 50, &Value[2], 4, 1, 0, 00, nullptr);
+	 Display BusIICurr 	= Display(this, 400, 215, 80, 50, &Value[3], 4, 1, 0, 00, nullptr);
+	 Display AB_Volt 	= Display(this, 200, 285, 100, 50, &Value[4], 4, 1, 0, 00, nullptr);
+	 Display AB_Curr 	= Display(this, 400, 285, 80, 50, &Value[5], 4, 1, 0, 00, nullptr);
 
 
 	Label Units[6] = {
@@ -77,15 +78,26 @@ public:
 	};
 
 	Display dispCont[4] = {
-			Display(this, 650, 145, 100, 50, &val, 4, 1, 0, 00, nullptr),
-			Display(this, 650, 205, 100, 50, &val, 4, 1, 0, 00, nullptr),
-			Display(this, 650, 275, 100, 50, &val, 4, 1, 0, 00, nullptr),
-			Display(this, 650, 345, 100, 50, &val, 4, 1, 0, 00, nullptr),
+			Display(this, 650, 145, 100, 50, &Value[6], 4, 1, 0, 00, nullptr),
+			Display(this, 650, 205, 100, 50, &Value[7], 4, 1, 0, 00, nullptr),
+			Display(this, 650, 275, 100, 50, &Value[8], 4, 1, 0, 00, nullptr),
+			Display(this, 650, 345, 100, 50, &Value[9], 4, 1, 0, 00, nullptr),
 	};
+
+	uint16_t Value[10] = {};
 
 	ScreenMain(void) : BaseScreen(&Screens, "Основной экран") {
 
 
+	}
+
+	void Loop(void) override {
+		this->Value[0] = AnalogBl.Mem.AI2;
+		this->Value[1] = AnalogBl.Mem.AI3;
+		this->Value[2] = AnalogBl.Mem.AI11;
+		this->Value[3] = AnalogBl.Mem.AI13;
+		this->Value[4] = AnalogBl.Mem.AI12;
+		this->Value[5] = AnalogBl.Mem.AI1;
 	}
 };
 

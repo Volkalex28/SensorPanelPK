@@ -29,15 +29,15 @@ class ScreenContrlInsulation : public BaseScreen {
 	Button left		= Button(this, 648, 170, 120, 55, 0x7BEF, "<<", 0);
 	Button right 	= Button(this, 648, 250, 120, 55, 0x7BEF, ">>", 0);
 
-	Button SetBKI 	= Button(this, 648, 250, 120, 55, 0x7BEF, ">>", 0);
+	//Button SetBKI 	= Button(this, 648, 250, 120, 55, 0x7BEF, ">>", 0);
 
 /*----------------------------------------------------------------------------------------------------------------*/
 	Label lfider[3] = {
-		Label(this, 5, 85, 300, 65, " ", Fonts::TimesNewRoman, FontForms::Normal,
+		Label(this, 5, 85, 300, 85, " ", Fonts::TimesNewRoman, FontForms::Normal,
 			VALabelScale::S2, VALabelAlignX::Left, VALabelAlignY::CenterY),
-		Label(this, 5, 205, 300, 65, " ", Fonts::TimesNewRoman, FontForms::Normal,
+		Label(this, 5, 205, 300, 85, " ", Fonts::TimesNewRoman, FontForms::Normal,
 			VALabelScale::S2, VALabelAlignX::Left, VALabelAlignY::CenterY),
-		Label(this, 5, 320, 300, 65, " ", Fonts::TimesNewRoman, FontForms::Normal,
+		Label(this, 5, 320, 300, 85, " ", Fonts::TimesNewRoman, FontForms::Normal,
 			VALabelScale::S2, VALabelAlignX::Left, VALabelAlignY::CenterY),
 	};
 

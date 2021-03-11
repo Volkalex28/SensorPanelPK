@@ -18,6 +18,7 @@
 #include "ScreenAnalogPl.h"
 #include "ScreenAnalogCoef.h"
 #include "ScreenSetAnalogPl.h"
+#include "ScreenSetBKI.h"
 
 Memory_un Memory[17000] = {};
 uint16_t Buf[4000] = {};
@@ -26,7 +27,7 @@ bool CrashBattery = true;
 
 using namespace VA;
 
-GUI Screens(16);
+GUI Screens(17);
 
 ScreenGlobal Global;									//0
 ScreenMenu Menu;										//1
@@ -45,7 +46,8 @@ ScreenBKI sBKI;											//13
 ScreenAnalogPl	sAnalogPl;								//14
 ScreenAnalogCoef sAnalogCoef;							//15
 ScreenSetAnalogPl sSetAnalogPl;							//16
-
+ScreenSetBKI sSetBKI;									//17
+ScreenAnalogTestIO sAnalogTestIO 
 
 WindowReboot Reboot;
 
@@ -56,6 +58,7 @@ Modbus Modbus2;
 
 #include "DeviceB118.h"
 #include "DeviceDCXJ.h"
+#include "AnalogBlock.h"
 
 DeviceB118 B118[4] = {
 		DeviceB118(ModeDevice::V220),
@@ -67,7 +70,10 @@ DeviceB118 B118[4] = {
 		DeviceB118(ModeDevice::V60)
 #endif
 };
+
 DeviceDCXJ DCXJ;
+AnalogBlock AnalogBl;
+
 
 
 void Setup(void) {
@@ -88,7 +94,7 @@ void Setup(void) {
 
 		EraseEvent();
 	}
-	osDelay(50);
+	
 	Screens.Init();
 	Screens.SetBackLight(Memory[eMemory::Backlight].U);
 	Screens.SetTimeOut(Memory[eMemory::TimeOut].U);
@@ -174,8 +180,7 @@ void LoopTask(void *argument) {
 }
 
 void ExchangeTask(void *argument) {
-
-	while(true) {
+while(true) {
 		for(uint16_t i = 0; i < BaseDevice::Devices.size(); i++) {
 			for(uint16_t n = 0; n < BaseDevice::Devices[i]->Exchange.size(); n++) {
 				if(BaseDevice::Devices[i]->Enable) {
@@ -183,60 +188,53 @@ void ExchangeTask(void *argument) {
 							BaseDevice::Devices[i]->Adress, BaseDevice::Devices[i]->Exchange[n].FirstReg,
 							BaseDevice::Devices[i]->Exchange[n].NReg, BaseDevice::Devices[i]->Exchange[n].pBuff
 						);
-					osDelay(500);
+					osDelay(300);
 				}
 				else { BaseDevice::Devices[i]->ErrorConnection = false; }
 
-//				if(BaseDevice::Devices[i]->ErrorConnection || !BaseDevice::Devices[i]->Enable) {
-//					memset(BaseDevice::Devices[i]->Exchange[n].pBuff, 0, BaseDevice::Devices[i]->Exchange[n].NReg*2);
-//				}
+				if(BaseDevice::Devices[i]->ErrorConnection || !BaseDevice::Devices[i]->Enable) {
+					memset(BaseDevice::Devices[i]->Exchange[n].pBuff, 0, BaseDevice::Devices[i]->Exchange[n].NReg*2);
+				}
 			}
 		}
 
+		WriteBuf_t temp;
+
 		for(uint16_t n = 0; n < 4; n++) {
-//
-			WriteBuf_t temp;
-//			if(B118[n].Enable && !B118[n].ErrorConnection && !B118[n].Mem.State.State) {
-//				if(abs(B118[n].Mem.Uout - B118[n].pSettings[*B118[n].pRegime]->Uset) >= 30) {
-//					temp.Adress = n + 1;
-//					temp.AdrReg = 0;
-//					temp.Value  = B118[n].pSettings[*B118[n].pRegime]->Uset;
-//					//osMessageQueuePut(WriteBufHandle, &temp, 0, 5);
-//					write(temp);
-//					//break;
-//				}
-//				if(B118[n].Mem.Imax != B118[n].pSettings[*B118[n].pRegime]->Iset) {
-//					temp.Adress = n + 1;
-//					temp.AdrReg = 2;
-//					temp.Value  = B118[n].pSettings[*B118[n].pRegime]->Iset;
-//					//osMessageQueuePut(WriteBufHandle, &temp, 0, 5);
-//					write(temp);
-//					//break;
-//				}
-//				if(B118[n].Mem.Umax != B118[n].pSettings[*B118[n].pRegime]->Umax) {
-//					temp.Adress = n + 1;
-//					temp.AdrReg = 3;
-//					temp.Value  = B118[n].pSettings[*B118[n].pRegime]->Umax;
-//					//osMessageQueuePut(WriteBufHandle, &temp, 0, 5);
-//					write(temp);
-//					//break;
-//				}
-//				if(B118[n].Mem.Umin != B118[n].pSettings[*B118[n].pRegime]->Umin) {
-//					temp.Adress = n + 1;
-//					temp.AdrReg = 4;
-//					temp.Value  = B118[n].pSettings[*B118[n].pRegime]->Umin;
-//					//osMessageQueuePut(WriteBufHandle, &temp, 0, 5);
-//					write(temp);
-//					//break;
-//				}
-//			}
+			
+
+			if(B118[n].Enable && !B118[n].ErrorConnection && !B118[n].Mem.State.State) {
+				if(abs(B118[n].Mem.Uout - B118[n].pSettings[*B118[n].pRegime]->Uset) >= 7) {
+					temp.Adress = B118[n].Adress;
+					temp.AdrReg = B118[n].Exchange[0].FirstReg + (&B118[n].Mem.Uout - B118[n].Exchange[0].pBuff);
+					temp.Value  = B118[n].pSettings[*B118[n].pRegime]->Uset;
+					osMessageQueuePut(WriteBufHandle, (void*)&temp, 0, 5);
+				}
+				if(B118[n].Mem.Imax != B118[n].pSettings[*B118[n].pRegime]->Iset) {
+					temp.Adress = B118[n].Adress;
+					temp.AdrReg = B118[n].Exchange[0].FirstReg + (&B118[n].Mem.Imax - B118[n].Exchange[0].pBuff);
+					temp.Value  = B118[n].pSettings[*B118[n].pRegime]->Iset;
+					osMessageQueuePut(WriteBufHandle, (void*)&temp, 0, 5);
+				}
+				if(B118[n].Mem.Umax != B118[n].pSettings[*B118[n].pRegime]->Umax) {
+					temp.Adress = B118[n].Adress;
+					temp.AdrReg = B118[n].Exchange[0].FirstReg + (&B118[n].Mem.Umax - B118[n].Exchange[0].pBuff);
+					temp.Value  = B118[n].pSettings[*B118[n].pRegime]->Umax;
+					osMessageQueuePut(WriteBufHandle, (void*)&temp, 0, 5);
+				}
+				if(B118[n].Mem.Umin != B118[n].pSettings[*B118[n].pRegime]->Umin) {
+					temp.Adress = B118[n].Adress;
+					temp.AdrReg = B118[n].Exchange[0].FirstReg + (&B118[n].Mem.Umin - B118[n].Exchange[0].pBuff);
+					temp.Value  = B118[n].pSettings[*B118[n].pRegime]->Umin;
+					osMessageQueuePut(WriteBufHandle, (void*)&temp, 0, 5);
+				}
+			}
 			if(B118[n].Enable && !B118[n].ErrorConnection) {
 				if(B118[n].Mem.State.State != *B118[n].pPusk) {
-					temp.Adress = n + 1;
-					temp.AdrReg = 5;
+					temp.Adress = B118[n].Adress;
+					temp.AdrReg = B118[n].Exchange[0].FirstReg + ((uint16_t*)&B118[n].Mem.State - B118[n].Exchange[0].pBuff);
 					temp.Value  = *B118[n].pPusk;
-					osMessageQueuePut(WriteBufHandle, &temp, 0, 5);
-					//break;
+					osMessageQueuePut(WriteBufHandle, (void*)&temp, 0, 5);
 				}
 			}
 		}
@@ -256,8 +254,7 @@ void ExchangeTask(void *argument) {
 			}
 			else break;
 		}
-
-		WriteBuf_t temp;
+		
 		while(osMessageQueueGetCount(WriteBufHandle)) {
 			osMessageQueueGet(WriteBufHandle, &temp, NULL, 5);
 			if(Modbus2.WriteHoldingRegister(temp.Adress, temp.AdrReg, temp.Value)) {
