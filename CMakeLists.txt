@@ -51,7 +51,7 @@ target_include_directories(${PROJECT_NAME} PRIVATE
   # ${SOURCE_DIR}/code/devices
   # ${SOURCE_DIR}/code/screens
   # ${SOURCE_DIR}/code/windows
-  # ${SOURCE_DIR}/code/VA_GUI
+  ${SOURCE_DIR}/VA_GUI
   # ${SOURCE_DIR}/code/VA_EEPROM_AT25640
   # ${SOURCE_DIR}/code
   ${SOURCE_DIR}
@@ -111,7 +111,7 @@ target_compile_options(${PROJECT_NAME} PRIVATE
 
   --specs=nano.specs
 
-  $<$<CONFIG:Debug>: -O0>
+  $<$<CONFIG:Debug>: -Ofast>
   $<$<CONFIG:Release>: -Ofast>
 )
 

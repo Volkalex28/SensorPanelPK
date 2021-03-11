@@ -3,7 +3,7 @@ BasedOnStyle: LLVM
 AccessModifierOffset: -2
 IndentWidth: 2
 ColumnLimit: 85
-# AlignAfterOpenBracket: DontAlign
+AlignAfterOpenBracket: DontAlign
 
 ConstructorInitializerIndentWidth: 2
 ContinuationIndentWidth: 2
@@ -12,7 +12,7 @@ FixNamespaceComments: true
 
 ContinuationIndentWidth: 2
 
-BinPackArguments: false
+BinPackArguments: true
 BinPackParameters: true
 PointerAlignment: Middle
 
