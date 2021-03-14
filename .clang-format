@@ -1,8 +1,8 @@
-BasedOnStyle: LLVM
+BasedOnStyle: Microsoft
 
 AccessModifierOffset: -2
 IndentWidth: 2
-ColumnLimit: 85
+ColumnLimit: 120
 AlignAfterOpenBracket: DontAlign
 
 ConstructorInitializerIndentWidth: 2
@@ -12,21 +12,5 @@ FixNamespaceComments: true
 
 ContinuationIndentWidth: 2
 
-BinPackArguments: true
-BinPackParameters: true
 PointerAlignment: Middle
-
-AlwaysBreakAfterReturnType: None
-AlwaysBreakTemplateDeclarations: Yes
-BreakBeforeBraces: Allman
-
-AllowShortFunctionsOnASingleLine: All
-AllowShortIfStatementsOnASingleLine: true
-AllowShortLoopsOnASingleLine: true
-AllowShortBlocksOnASingleLine: true
-
-AlignTrailingComments: true
-AlignConsecutiveMacros: true
-AlignConsecutiveAssignments: true   
-BreakConstructorInitializers: BeforeColon
-ConstructorInitializerAllOnOneLineOrOnePerLine: false
+BinPackArguments: false

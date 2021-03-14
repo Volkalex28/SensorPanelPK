@@ -27,8 +27,17 @@ namespace VA
     CYAN    = 0x07FF,
     MAGENTA = 0xF81F,
     YELLOW  = 0xFFE0,
-    WHITE   = 0xFFFF
+    WHITE   = 0xFFFF,
+
+    GREY    = 0xB5B6,
+
+    BACKGROUND = GREY
   };
+
+  // const Colors operator+(const Colors color, int64_t val)
+  // {
+  //   color
+  // }
 
   class Point
   {
@@ -47,6 +56,9 @@ namespace VA
 
     void setX(const uint16_t value);
     void setY(const uint16_t value);
+
+    const bool operator==(const Point & other) const;
+    const bool operator!=(const Point & other) const;
   };
 
   class Rectangle
@@ -61,6 +73,8 @@ namespace VA
       const uint16_t height = 1, const Colors color = Colors::BLACK);
     Rectangle(const Rectangle & other);
     Rectangle(Rectangle && other);
+
+    virtual ~Rectangle(void) {};
 
     const Rectangle & operator=(const Rectangle & other);
     const Rectangle & operator=(Rectangle && other);

@@ -15,12 +15,12 @@ namespace VA
 struct Touch
 {
   virtual void touchEnable(bool on) const = 0;
-	virtual bool touched(void) const = 0;
+	virtual bool isTouched(void) const = 0;
 	virtual const Point touchRead(void) const = 0;
 
 protected:
-  Touch(void) {}
-  virtual ~Touch(void) {}
+  Touch(void);
+  virtual ~Touch(void);
 };
 
 } /* namespace VA */

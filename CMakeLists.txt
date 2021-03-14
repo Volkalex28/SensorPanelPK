@@ -59,9 +59,9 @@ target_include_directories(${PROJECT_NAME} PRIVATE
   ${SOURCE_DIR}/drivers/STM32F7xx_HAL_Driver/Inc/Legacy
   ${SOURCE_DIR}/drivers/CMSIS/Device/ST/STM32F7xx/Include
   ${SOURCE_DIR}/drivers/CMSIS/Include
-  # ${SOURCE_DIR}/middlewares/Third_Party/FreeRTOS/Source/include
+  ${SOURCE_DIR}/middlewares/FreeRTOS/include
   # ${SOURCE_DIR}/middlewares/Third_Party/FreeRTOS/Source/CMSIS_RTOS_V2
-  # ${SOURCE_DIR}/middlewares/Third_Party/FreeRTOS/Source/portable/GCC/ARM_CM7/r0p1
+  ${SOURCE_DIR}/middlewares/FreeRTOS/portable/GCC/ARM_CM7/r0p1
 )
 
 set_target_properties(${PROJECT_NAME} PROPERTIES

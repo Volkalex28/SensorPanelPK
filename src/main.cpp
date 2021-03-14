@@ -5,14 +5,25 @@
  *
  */
 
+#include <math.h>
+
 #include <stm32f7xx_hal.h>
+
+#include "freertos.hpp"
 
 #include "peripheral/pinit.hpp"
 #include "peripheral/pins.hpp"
 
-#include "drivers/RA8875/RA8875.hpp"
+#include "drivers/VA_RA8875/VA_RA8875.hpp"
 
-static RA8875 disp(RA8875::displaySizes::_800x480, HAL_Delay);
+#include "VA_GUI/Elements/VAGraphics.hpp"
+
+using namespace VA;
+
+Graphics<Triangle> temp({ { 80, 400 }, { 99, 200 }, { 61, 200 }, Colors::MAGENTA }, false, true);
+Graphics<RoundRect> rr({ { 100, 0 }, 200, 2, 20, VA::Colors::BLUE });
+
+RA8875 disp(RA8875::displaySizes::_800x480, HAL_Delay);
 
 int main(void)
 {
@@ -31,46 +42,92 @@ int main(void)
   Peripheral::VA_RTC::Init();
   Peripheral::VA_IWDG::Init();
 
-  HAL_GPIO_WritePin(OUT2_GPIO_Port, OUT2_Pin, (GPIO_PinState)disp.init());
-  ;
+  disp.init();
+  disp.setLayer(VA::LCD::layers::LAYER1);
+  disp.fillScreen(VA::Colors::BLACK);
+  disp.setLayer(VA::LCD::layers::LAYER2);
+  disp.fillScreen(VA::Colors::BLACK);
+  HAL_Delay(50);
   disp.setBrightness(50);
 
-  // disp.fillScreen(disp.Colour565To332(VA::Colors::GREEN));
+  OS::FreeRTOS::Init();
 
-  // disp.draw(
-  //   VA::RoundRect({ 100, 50 }, 200, 200, 20,
-  //   disp.Colour565To332(VA::Colors::BLUE)), true);
-  // disp.draw(VA::Triangle({ { 500, 20 }, { 300, 300 }, { 700, 250 } },
-  //             disp.Colour565To332(VA::Colors::RED)),
-  //   true);
+  while (true)
+    continue;
+}
 
-  // disp.draw(VA::Ellipse(VA::Rectangle({650, 0}, 150, 240)), true);
-  // disp.draw(VA::Rectangle({650, 20}, 70, 70,
-  // disp.Colour565To332(VA::Colors::WHITE)), true);
+float count = 0;
+bool state = false;
 
-  VA::RoundRect rr({ 100, 0 }, 200, 0, 20, disp.Colour565To332(VA::Colors::BLUE));
+void taskShow(void * pvParametres)
+{
+  using namespace OS::FreeRTOS;
 
-  uint32_t count = 0, cl = 0;
+  portTickType xLastWakeTime = xTaskGetTickCount();
 
   while (true)
   {
-    HAL_GPIO_TogglePin(OUT1_GPIO_Port, OUT1_Pin);
-    HAL_Delay(3);
-    HAL_IWDG_Refresh(&Peripheral::VA_IWDG::hiwdg);
+    static Graphics<Ellipse> elp({ { 100, 100 }, 20, 20, Colors::WHITE });
+    const Point touchPoint = disp.getTouchPoint();
 
-    disp.setLayer((VA::LCD::layers)(cl % 2));
+    if (touchPoint != Point())
+    {
 
-    disp.fillScreen(disp.Colour565To332(VA::Colors::GREEN));
-    disp.draw(rr, true);
+      if (!elp.isMe(touchPoint))
+      {
+        elp.setCenter(touchPoint);
+      }
+      else
+      {
+        elp.show(true); // place for call the touthed function
+      }
 
-    disp.showLayer((VA::LCD::layers)(cl % 2));
-
-    if (disp.touched()) {
-      disp.touchRead();
-      count++;
+      state = !rr.isMe(elp.getCenter());
     }
-    rr.setHeight(count % 480);
+    else
+    {
+      elp.show(false);
+      state = true;
+    }
 
-    cl++;
+    rr.setHeight(count);
+
+    // ==================================== show ==============================
+    disp.setLayer(disp.getLayer() + 1);
+    disp.fillScreen(VA::Colors::BACKGROUND);
+    if (temp.isMe(Point(temp.getCenterW(), rr.getNullPoint().getY() + rr.getHeight())))
+    {
+      temp.draw(disp);
+    }
+
+    rr.draw(disp);
+    elp.draw(disp);
+
+    disp.showLayer(disp.getLayer());
+
+    HAL_IWDG_Refresh(&Peripheral::VA_IWDG::hiwdg);
+    taskYIELD();
+
+    vTaskDelayUntil(&xLastWakeTime, (40 / portTICK_RATE_MS));
   }
+}
+
+void taskBlink(void * pvParametres)
+{
+  while (true)
+  {
+    HAL_GPIO_TogglePin(OUT1_GPIO_Port, OUT1_Pin);
+
+    taskYIELD();
+    OS::FreeRTOS::vTaskDelay(500);
+  }
+}
+
+void timerCallbackScroll(OS::FreeRTOS::xTimerHandle xTimer)
+{
+  if (state)
+  {
+    count = fmodf(count + 4.8f / 1, 480);
+  }
+  taskYIELD();
 }
