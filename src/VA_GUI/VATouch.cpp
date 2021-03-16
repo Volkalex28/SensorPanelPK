@@ -12,9 +12,11 @@ namespace VA
 
 Touch::Touch(void)
 {
+  /* There's nothing here */
 }
 
 Touch::~Touch(void)
 {
+  /* There's nothing here */
 }
 } // namespace VA

@@ -7,7 +7,7 @@
 
 #include "VABaseElement.hpp"
 
-namespace VA
+namespace VA::Elements
 {
 
 BaseElement::BaseElement(const bool enable, const bool show) : _enabled(enable), _showed(show)

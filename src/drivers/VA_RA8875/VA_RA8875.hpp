@@ -38,6 +38,7 @@ public:
   };
 
   RA8875(displaySizes size, void (*volatile Delay)(const uint32_t ticks));
+  ~RA8875(void) override;
 
   bool init(void) override;
   void displayOn(void) const override;
@@ -52,19 +53,20 @@ public:
   void drawPixels(const VA::Point & startPoint, const uint16_t count, const VA::Colors * const color) const override;
 
   void fillScreen(const VA::Colors color) const override;
-  void draw(const VA::Rectangle & object, bool fill = false) const override;
-  void draw(const VA::Ellipse & object, bool fill = false) const override;
-  void draw(const VA::Curve & object, bool fill = false) const override;
-  void draw(const VA::RoundRect & object, bool fill = false) const override;
-  void draw(const VA::Triangle & object, bool fill = false) const override;
+  void draw(const VA::Rectangle & object, bool fill = true) const override;
+  void draw(const VA::Ellipse & object, bool fill = true) const override;
+  void draw(const VA::Curve & object, bool fill = true) const override;
+  void draw(const VA::RoundRect & object, bool fill = true) const override;
+  void draw(const VA::Triangle & object, bool fill = true) const override;
 
   void touchEnable(bool on) const override;
   bool isTouched(void) const override;
 
   const VA::Point getTouchPoint(void) const;
+  void setColor(uint32_t color) const override;
 
 private:
-#define del 25
+#define del 30
   const displaySizes _size;
   
   mutable Point touchPointFiltred = Point();
@@ -81,19 +83,18 @@ private:
   const VA::Point touchRead(void) const override;
 
   const VA::Colors Color565To332(const VA::Colors color) const;
-  void setColor(uint16_t color) const;
 
-  void circleHelper(uint16_t x, uint16_t y, uint16_t r, uint16_t color, bool filled) const;
-  void rectHelper(uint16_t x, uint16_t y, uint16_t w, uint16_t h, uint16_t color, bool filled) const;
+  void circleHelper(uint16_t x, uint16_t y, uint16_t r, uint32_t color, bool filled) const;
+  void rectHelper(uint16_t x, uint16_t y, uint16_t w, uint16_t h, uint32_t color, bool filled) const;
   void triangleHelper(
-    uint16_t x0, uint16_t y0, uint16_t x1, uint16_t y1, uint16_t x2, uint16_t y2, uint16_t color, bool filled) const;
+    uint16_t x0, uint16_t y0, uint16_t x1, uint16_t y1, uint16_t x2, uint16_t y2, uint32_t color, bool filled) const;
   void ellipseHelper(
-    uint16_t xCenter, uint16_t yCenter, uint16_t longAxis, uint16_t shortAxis, uint16_t color, bool filled) const;
+    uint16_t xCenter, uint16_t yCenter, uint16_t longAxis, uint16_t shortAxis, uint32_t color, bool filled) const;
   void curveHelper(uint16_t xCenter, uint16_t yCenter, uint16_t longAxis, uint16_t shortAxis, uint8_t curvePart,
-    uint16_t color, bool filled) const;
-  void roundRectHelper(uint16_t x, uint16_t y, uint16_t w, uint16_t h, uint16_t r, uint16_t color, bool filled) const;
+    uint32_t color, bool filled) const;
+  void roundRectHelper(uint16_t x, uint16_t y, uint16_t w, uint16_t h, uint16_t r, uint32_t color, bool filled) const;
 
-  inline void delay(volatile uint32_t micros) const;
+  void delay(volatile uint32_t micros) const;
   void (*exDelay)(const uint32_t ticks);
 
   void writeCommand(const uint16_t reg) const;

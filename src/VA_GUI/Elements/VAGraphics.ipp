@@ -6,7 +6,7 @@
  */
 
 template <class Parent_t>
-Graphics<Parent_t>::Graphics(const Parent_t && other, const bool enable, const bool show)
+Graphics<Parent_t>::Graphics(const Parent_t & other, const bool enable, const bool show)
   : Parent_t(other), BaseElement(enable, show)
 {
 }

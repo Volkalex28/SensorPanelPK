@@ -12,6 +12,8 @@
 
 namespace VA
 {
+namespace Elements
+{
 
 class BaseElement
 {
@@ -31,5 +33,7 @@ public:
 
   virtual void draw(const LCD & lcd) const;
 };
+
+} // namespace Elements
 
 } // namespace VA

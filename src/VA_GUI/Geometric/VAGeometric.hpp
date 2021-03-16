@@ -31,7 +31,9 @@ namespace VA
 
     GREY    = 0xB5B6,
 
-    BACKGROUND = GREY
+    BACKGROUND  = GREY,
+    TRANSPERENT = 1,
+    NOT_CHANGE,
   };
 
   // const Colors operator+(const Colors color, int64_t val)
@@ -104,6 +106,7 @@ namespace VA
       const uint16_t height = 1, const Colors color = Colors::BLACK);
     Ellipse(const Rectangle & other);
     Ellipse(Rectangle && other);
+    ~Ellipse(void) override;
     
     void setCenter(const Point & value);
   };
@@ -131,6 +134,7 @@ namespace VA
     Curve(Curve && other);
     Curve(const Rectangle & other, Mode mode = Mode::MODE0);
     Curve(Rectangle && other, Mode mode = Mode::MODE0);
+    ~Curve(void) override;
 
     const Mode getMode(void) const;
     void setMode(const Mode mode);
@@ -149,6 +153,7 @@ namespace VA
     RoundRect(RoundRect && other);
     RoundRect(const Rectangle & other, uint16_t radius = 0);
     RoundRect(Rectangle && other, uint16_t radius = 0);
+    ~RoundRect(void) override;
 
     const uint16_t getRadius(void) const;
     void setRadius(const uint16_t value);
@@ -177,6 +182,7 @@ namespace VA
     Triangle(const Point points[3], const Colors color = Colors::BLACK);
     Triangle(const Triangle & other);
     Triangle(Triangle && other);
+    ~Triangle(void) override;
 
     const Point operator[](const uint16_t index) const;
     const Point setPoint(const uint16_t index, const Point & point);

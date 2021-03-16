@@ -1,8 +1,8 @@
 /**
  * @file VATouch.hpp
  * @author Oleksandr Ananiev (alexander.ananiev@sigma.sofware)
- * @brief 
- * 
+ * @brief
+ *
  */
 
 #include "stdint.h"
@@ -15,8 +15,8 @@ namespace VA
 struct Touch
 {
   virtual void touchEnable(bool on) const = 0;
-	virtual bool isTouched(void) const = 0;
-	virtual const Point touchRead(void) const = 0;
+  virtual bool isTouched(void) const = 0;
+  virtual const Point touchRead(void) const = 0;
 
 protected:
   Touch(void);
